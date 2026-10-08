@@ -468,13 +468,16 @@
         ]
       },
       "pnlUsd": 200
+    },
+    "2026-10-08": {
+      "pnlUsd": 700
     }
   },
   "finance": {
     "displayCurrency": "USD",
     "monthGoalUsd": 1200000,
-    "balanceUsd": 10100,
-    "balanceAsOf": "2026-10-07",
+    "balanceUsd": 10110,
+    "balanceAsOf": "2026-10-08",
     "stableUsd": 0,
     "wallets": {
       "asOf": "2026-10-07",
