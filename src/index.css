@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { background: #070b14; color: #e2e8f0; -webkit-font-smoothing: antialiased; }
+body {
+  background-image:
+    radial-gradient(900px 500px at 10% -10%, rgba(56,189,248,.12), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, rgba(129,140,248,.12), transparent 60%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+@layer components {
+  .card { @apply rounded-2xl border border-white/[.07] bg-white/[.035] backdrop-blur-sm p-4 sm:p-5 shadow-[0_1px_0_0_rgba(255,255,255,.04)_inset]; }
+  .card-title { @apply text-sm font-medium text-slate-400 flex items-center gap-2; }
+  .chip { @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium; }
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+.recharts-cartesian-grid line { stroke: rgba(255,255,255,.06); }
+.recharts-text { fill: #64748b; font-size: 11px; }
+/* Не даём элементам сетки распирать страницу на телефоне */
+.grid > * { min-width: 0; }
+
+/* Приветствие: полноэкранный оверлей, без горизонтального скролла на ~390px */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: 1.25rem 1.25rem calc(4.5rem + env(safe-area-inset-bottom));
+  background: #070b14;
+  background-image:
+    radial-gradient(900px 520px at 50% 18%, rgba(56,189,248,.10), transparent 62%),
+    radial-gradient(700px 420px at 100% 100%, rgba(129,140,248,.10), transparent 60%);
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+.intro-overlay--out { opacity: 0; pointer-events: none; }
+.intro-snow { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.intro-flake {
+  position: absolute;
+  top: -8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  animation-name: intro-snow;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.intro-portrait {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: min(440px, 86vw);
+  max-height: min(58vh, 480px);
+  object-fit: contain;
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, .55);
+  animation: intro-arrive 2.1s cubic-bezier(.16,.7,.2,1) both;
+}
+.intro-copy {
+  position: relative;
+  text-align: center;
+  animation: intro-rise 1.6s ease 0.35s both;
+}
+.intro-skip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(1.1rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  padding: 0.55rem 1rem;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+@keyframes intro-arrive {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes intro-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes intro-snow {
+  from { transform: translate3d(0, -8px, 0); }
+  to { transform: translate3d(12px, 110vh, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay { display: none; }
+}
+
+/* Экран кода: поверх всего, до монтирования приложения */
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding:
+    calc(2.75rem + env(safe-area-inset-top))
+    1rem
+    calc(1.75rem + env(safe-area-inset-bottom));
+  background: #070b14;
+  background-image:
+    radial-gradient(900px 520px at 50% -8%, rgba(56,189,248,.12), transparent 62%),
+    radial-gradient(700px 420px at 100% 100%, rgba(129,140,248,.10), transparent 60%);
+  overflow: hidden;
+}
+.lock-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.lock-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 16px 40px rgba(2, 6, 23, .45);
+}
+.lock-title {
+  margin-top: 0.85rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+  font-size: 1.15rem;
+}
+.lock-hint {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+.lock-dots {
+  display: flex;
+  gap: 1.15rem;
+  margin-top: 1.6rem;
+}
+.lock-dots--shake {
+  animation: lock-shake 0.42s ease;
+}
+.lock-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(226, 232, 240, .9);
+  box-sizing: border-box;
+}
+.lock-dot--on {
+  background: #e2e8f0;
+  border-color: #e2e8f0;
+}
+.lock-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 76px);
+  justify-content: center;
+  gap: 1rem 1.5rem;
+  width: 100%;
+  max-width: 20rem;
+}
+.lock-key {
+  width: 76px;
+  height: 76px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .09);
+  color: #f8fafc;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.lock-key:active {
+  background: rgba(255, 255, 255, .28);
+}
+.lock-key--ghost {
+  background: transparent;
+}
+.lock-key--ghost:active {
+  background: rgba(255, 255, 255, .06);
+}
+@keyframes lock-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-7px); }
+  80% { transform: translateX(7px); }
+}
+@media (max-width: 360px), (max-height: 680px) {
+  .lock-screen {
+    padding-top: calc(1.5rem + env(safe-area-inset-top));
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+  .lock-logo { width: 48px; height: 48px; }
+  .lock-dots { margin-top: 1.15rem; }
+  .lock-pad {
+    grid-template-columns: repeat(3, 68px);
+    gap: 0.75rem 1.15rem;
+  }
+  .lock-key {
+    width: 68px;
+    height: 68px;
+    font-size: 1.75rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lock-dots--shake { animation: none; }
+}

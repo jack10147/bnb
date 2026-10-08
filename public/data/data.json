@@ -1,0 +1,521 @@
+{
+  "meta": {
+    "title": "Winter Arc",
+    "owner": "",
+    "sample": false,
+    "startDate": "2026-10-01",
+    "durationDays": 30,
+    "longTermEndDate": "2027-03-28",
+    "timezone": "Asia/Almaty",
+    "hideFinance": false,
+    "lastUpdated": "2026-10-06T23:20:17+05:00"
+  },
+  "profile": {
+    "age": 23,
+    "heightCm": 186
+  },
+  "targets": {
+    "calories": 2000,
+    "maintenanceCalories": 2890,
+    "protein": null,
+    "fat": null,
+    "carbs": null,
+    "workHoursPerDay": null,
+    "workHoursPerWeek": null,
+    "startWeight": 105,
+    "goalWeight": 98.5,
+    "goalWeightDate": "2026-10-28",
+    "goalLabel": "−6–7 кг"
+  },
+  "habits": [
+    {
+      "id": "morning",
+      "name": "Зарядка утром",
+      "emoji": "🤸",
+      "note": "минимум 10 минут, 1 раз в день"
+    },
+    {
+      "id": "active4x10",
+      "name": "Активность 4×10 мин",
+      "emoji": "🚶",
+      "target": 4,
+      "note": "10 минут активности, 4 раза в день"
+    },
+    {
+      "id": "omega3",
+      "name": "Омега-3",
+      "emoji": "🐟",
+      "note": "каждый день"
+    },
+    {
+      "id": "vitc",
+      "name": "Витамин C",
+      "emoji": "🍊",
+      "note": "каждый день"
+    },
+    {
+      "id": "zinc",
+      "name": "Цинк",
+      "emoji": "⚪",
+      "note": "каждый день"
+    },
+    {
+      "id": "d3",
+      "name": "Витамин D3",
+      "emoji": "☀️",
+      "note": "каждый день"
+    },
+    {
+      "id": "magnesium",
+      "name": "Магний",
+      "emoji": "🌙",
+      "note": "каждый день"
+    },
+    {
+      "id": "collagen",
+      "name": "Коллаген",
+      "emoji": "💪",
+      "note": "каждый день"
+    },
+    {
+      "id": "creatine",
+      "name": "Креатин",
+      "emoji": "⚡",
+      "note": "каждый день"
+    }
+  ],
+  "exercises": [],
+  "goals": {
+    "month": [
+      {
+        "id": "m-weight",
+        "title": "Сбросить 6–7 кг к 28 октября (до ~98,5 кг)",
+        "category": "Спорт",
+        "start": 105,
+        "current": 105,
+        "target": 98.5,
+        "unit": "кг",
+        "auto": "weight",
+        "deadline": "2026-10-28"
+      },
+      {
+        "id": "m-earn",
+        "title": "Заработать $1,2 млн в октябре",
+        "category": "Финансы",
+        "start": 0,
+        "current": 0,
+        "target": 1200000,
+        "unit": "$",
+        "auto": "financeUsd",
+        "month": "2026-10",
+        "deadline": "2026-10-31"
+      }
+    ],
+    "sixMonth": []
+  },
+  "days": {
+    "2026-09-01": {
+      "pnlUsd": 1030
+    },
+    "2026-09-02": {
+      "pnlUsd": -1690
+    },
+    "2026-09-03": {
+      "pnlUsd": -577.3
+    },
+    "2026-09-04": {
+      "pnlUsd": 1110
+    },
+    "2026-09-05": {
+      "pnlUsd": 1780
+    },
+    "2026-09-06": {
+      "pnlUsd": 12600
+    },
+    "2026-09-07": {
+      "pnlUsd": 10700
+    },
+    "2026-09-08": {
+      "pnlUsd": -2930
+    },
+    "2026-09-09": {
+      "pnlUsd": -18.52
+    },
+    "2026-09-10": {
+      "pnlUsd": -1130
+    },
+    "2026-09-11": {
+      "pnlUsd": -838.9
+    },
+    "2026-09-12": {
+      "pnlUsd": -488.1
+    },
+    "2026-09-13": {
+      "pnlUsd": -70.59
+    },
+    "2026-09-14": {
+      "pnlUsd": -16.99
+    },
+    "2026-09-15": {
+      "pnlUsd": 1340
+    },
+    "2026-09-16": {
+      "pnlUsd": -737.6
+    },
+    "2026-09-17": {
+      "pnlUsd": 1490
+    },
+    "2026-09-18": {
+      "pnlUsd": 980.4
+    },
+    "2026-09-19": {
+      "pnlUsd": -658.7
+    },
+    "2026-09-20": {
+      "pnlUsd": -1010
+    },
+    "2026-09-21": {
+      "pnlUsd": 1130
+    },
+    "2026-09-22": {
+      "pnlUsd": -88.88
+    },
+    "2026-09-23": {
+      "pnlUsd": -309.5
+    },
+    "2026-09-24": {
+      "pnlUsd": 2040
+    },
+    "2026-09-25": {
+      "pnlUsd": -233.9
+    },
+    "2026-09-26": {
+      "pnlUsd": -754
+    },
+    "2026-09-27": {
+      "pnlUsd": 5.597
+    },
+    "2026-09-28": {
+      "pnlUsd": 1250
+    },
+    "2026-09-29": {
+      "pnlUsd": 3330
+    },
+    "2026-09-30": {
+      "pnlUsd": -820.4
+    },
+    "2026-10-01": {
+      "weight": 105,
+      "work": {
+        "hours": 12,
+        "tasks": []
+      },
+      "nutrition": {
+        "calories": 2500,
+        "note": "завтрак, обед и ужин, сумма"
+      },
+      "pnlUsd": -2176,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true
+      },
+      "expenses": [
+        {
+          "id": "exp-oct-01-1",
+          "date": "2026-10-01",
+          "amountKzt": 5500,
+          "note": "продукты",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-01-2",
+          "date": "2026-10-01",
+          "amountKzt": 2000,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-01-3",
+          "date": "2026-10-01",
+          "amountKzt": 3200,
+          "note": "обед",
+          "category": "Еда"
+        }
+      ]
+    },
+    "2026-10-02": {
+      "pnlUsd": -80,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true
+      },
+      "expenses": [
+        {
+          "id": "exp-oct-02-1",
+          "date": "2026-10-02",
+          "amountKzt": 2800,
+          "note": "еда",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-02-2",
+          "date": "2026-10-02",
+          "amountKzt": 1500,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-02-3",
+          "date": "2026-10-02",
+          "amountKzt": 4800,
+          "note": "кино",
+          "category": "Развлечения"
+        },
+        {
+          "id": "exp-oct-02-4",
+          "date": "2026-10-02",
+          "amountKzt": 3000,
+          "note": "мелочи",
+          "category": "Другое"
+        }
+      ]
+    },
+    "2026-10-03": {
+      "pnlUsd": 141,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true
+      },
+      "expenses": [
+        {
+          "id": "exp-oct-03-1",
+          "date": "2026-10-03",
+          "amountKzt": 4000,
+          "note": "продукты",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-03-2",
+          "date": "2026-10-03",
+          "amountKzt": 1800,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-03-3",
+          "date": "2026-10-03",
+          "amountKzt": 2400,
+          "note": "аптека/прочее",
+          "category": "Другое"
+        }
+      ]
+    },
+    "2026-10-04": {
+      "pnlUsd": -1833,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true
+      },
+      "expenses": [
+        {
+          "id": "exp-oct-04-1",
+          "date": "2026-10-04",
+          "amountKzt": 3500,
+          "note": "еда",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-04-2",
+          "date": "2026-10-04",
+          "amountKzt": 4200,
+          "note": "кафе",
+          "category": "Развлечения"
+        },
+        {
+          "id": "exp-oct-04-3",
+          "date": "2026-10-04",
+          "amountKzt": 2000,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-04-4",
+          "date": "2026-10-04",
+          "amountKzt": 1500,
+          "note": "разное",
+          "category": "Другое"
+        }
+      ]
+    },
+    "2026-10-05": {
+      "pnlUsd": 2310,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true,
+        "creatine": true
+      },
+      "expenses": [
+        {
+          "id": "exp-oct-05-1",
+          "date": "2026-10-05",
+          "amountKzt": 2900,
+          "note": "продукты",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-05-2",
+          "date": "2026-10-05",
+          "amountKzt": 1200,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-05-deposit",
+          "date": "2026-10-05",
+          "amountKzt": 1000,
+          "note": "депозит",
+          "category": "Депозит"
+        },
+        {
+          "id": "exp-oct-05-3",
+          "date": "2026-10-05",
+          "amountKzt": 3800,
+          "note": "покупки",
+          "category": "Другое"
+        }
+      ]
+    },
+    "2026-10-06": {
+      "pnlUsd": 326,
+      "habits": {
+        "omega3": true,
+        "vitc": true,
+        "zinc": true,
+        "d3": true,
+        "magnesium": true,
+        "collagen": true,
+        "creatine": true
+      },
+      "weight": 101,
+      "expenses": [
+        {
+          "id": "exp-oct-06-1",
+          "date": "2026-10-06",
+          "amountKzt": 2500,
+          "note": "еда",
+          "category": "Еда"
+        },
+        {
+          "id": "exp-oct-06-2",
+          "date": "2026-10-06",
+          "amountKzt": 900,
+          "note": "такси",
+          "category": "Транспорт"
+        },
+        {
+          "id": "exp-oct-06-3",
+          "date": "2026-10-06",
+          "amountKzt": 2500,
+          "note": "развлечения",
+          "category": "Развлечения"
+        }
+      ]
+    },
+    "2026-10-07": {
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Обед",
+            "name": "Курица в соусе с рисом, ~360 г (оценка по фото)",
+            "kcal": 700,
+            "protein": 35,
+            "fat": 25,
+            "carbs": 85
+          },
+          {
+            "type": "Ужин",
+            "name": "Ужин, примерно со слов",
+            "kcal": 1000
+          },
+          {
+            "type": "Перекус",
+            "name": "2 средних банана",
+            "kcal": 210,
+            "protein": 3,
+            "fat": 1,
+            "carbs": 54
+          }
+        ]
+      },
+      "pnlUsd": 200
+    }
+  },
+  "finance": {
+    "displayCurrency": "USD",
+    "monthGoalUsd": 1200000,
+    "balanceUsd": 10100,
+    "balanceAsOf": "2026-10-07",
+    "stableUsd": 0,
+    "wallets": {
+      "asOf": "2026-10-07",
+      "kzt": 85000,
+      "topups": []
+    }
+  },
+  "taskList": {
+    "month": "2026-10",
+    "label": "Задачи на октябрь",
+    "items": [
+      {
+        "id": "macbook",
+        "title": "Купить MacBook Pro",
+        "done": false,
+        "date": null
+      },
+      {
+        "id": "dentist",
+        "title": "Сходить к стоматологу",
+        "done": false,
+        "date": null
+      },
+      {
+        "id": "checkup",
+        "title": "Сделать чекап",
+        "done": false,
+        "date": null
+      },
+      {
+        "id": "mouse",
+        "title": "Купить мышку Logitech",
+        "done": false,
+        "date": null
+      },
+      {
+        "id": "toothbrush",
+        "title": "Купить зубную щётку",
+        "done": false,
+        "date": null
+      }
+    ]
+  }
+}

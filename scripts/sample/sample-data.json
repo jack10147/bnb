@@ -1,0 +1,1491 @@
+{
+  "meta": {
+    "title": "Winter Arc",
+    "owner": "Пример",
+    "sample": true,
+    "startDate": "2026-09-28",
+    "durationDays": 30,
+    "longTermEndDate": "2027-03-28",
+    "timezone": "Asia/Almaty",
+    "asOf": "2026-10-11",
+    "lastUpdated": "2026-10-11T22:00:00+05:00"
+  },
+  "targets": {
+    "calories": 2300,
+    "protein": 160,
+    "fat": 75,
+    "carbs": 230,
+    "workHoursPerDay": 6,
+    "workHoursPerWeek": 35,
+    "startWeight": 82.5,
+    "goalWeight": 78
+  },
+  "habits": [
+    {
+      "id": "wake",
+      "name": "Подъём в 6:00",
+      "emoji": "🌅"
+    },
+    {
+      "id": "water",
+      "name": "2.5 л воды",
+      "emoji": "💧"
+    },
+    {
+      "id": "read",
+      "name": "Чтение 30 мин",
+      "emoji": "📚"
+    },
+    {
+      "id": "nosugar",
+      "name": "Без сахара",
+      "emoji": "🚫"
+    },
+    {
+      "id": "steps",
+      "name": "10 000 шагов",
+      "emoji": "👟"
+    },
+    {
+      "id": "cold",
+      "name": "Холодный душ",
+      "emoji": "🧊"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "bench",
+      "name": "Жим лёжа",
+      "metric": "weight",
+      "unit": "кг"
+    },
+    {
+      "id": "pullups",
+      "name": "Подтягивания",
+      "metric": "reps",
+      "unit": "повт."
+    },
+    {
+      "id": "squat",
+      "name": "Присед",
+      "metric": "weight",
+      "unit": "кг"
+    },
+    {
+      "id": "run",
+      "name": "Бег",
+      "metric": "distance",
+      "unit": "км"
+    }
+  ],
+  "goals": {
+    "month": [
+      {
+        "id": "m-weight",
+        "title": "Сбросить 2 кг",
+        "category": "Спорт",
+        "start": 82.5,
+        "current": 80.7,
+        "target": 80.5,
+        "unit": "кг"
+      },
+      {
+        "id": "m-books",
+        "title": "Прочитать 2 книги",
+        "category": "Развитие",
+        "start": 0,
+        "current": 1,
+        "target": 2,
+        "unit": "кн."
+      },
+      {
+        "id": "m-work",
+        "title": "140 часов глубокой работы",
+        "category": "Работа",
+        "start": 0,
+        "current": 0,
+        "target": 140,
+        "unit": "ч",
+        "auto": "workHours"
+      },
+      {
+        "id": "m-bench",
+        "title": "Жим 80 кг на 5",
+        "category": "Спорт",
+        "start": 70,
+        "current": 85,
+        "target": 80,
+        "unit": "кг"
+      },
+      {
+        "id": "m-workouts",
+        "title": "12 тренировок",
+        "category": "Спорт",
+        "start": 0,
+        "current": 0,
+        "target": 12,
+        "unit": "шт",
+        "auto": "workouts"
+      }
+    ],
+    "sixMonth": [
+      {
+        "id": "s-weight",
+        "title": "Вес 75 кг",
+        "category": "Спорт",
+        "start": 82.5,
+        "current": 80.7,
+        "target": 75,
+        "unit": "кг"
+      },
+      {
+        "id": "s-pull",
+        "title": "20 подтягиваний",
+        "category": "Спорт",
+        "start": 8,
+        "current": 12,
+        "target": 20,
+        "unit": "повт."
+      },
+      {
+        "id": "s-eng",
+        "title": "Английский B2",
+        "category": "Развитие",
+        "start": 0,
+        "current": 15,
+        "target": 100,
+        "unit": "%"
+      },
+      {
+        "id": "s-save",
+        "title": "Накопить 1 000 000 ₸",
+        "category": "Финансы",
+        "start": 0,
+        "current": 120000,
+        "target": 1000000,
+        "unit": "₸"
+      },
+      {
+        "id": "s-books",
+        "title": "12 книг",
+        "category": "Развитие",
+        "start": 0,
+        "current": 1,
+        "target": 12,
+        "unit": "кн."
+      }
+    ]
+  },
+  "days": {
+    "2026-09-28": {
+      "weight": 82,
+      "tasks": [
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        },
+        {
+          "title": "Код-ревью",
+          "done": false
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": false
+        },
+        {
+          "title": "Прочитать главу книги",
+          "done": false
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": false,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 5.9,
+        "notes": "Исправил баги в релизе",
+        "results": [
+          "Задача #100",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Омлет из 3 яиц, тост",
+            "kcal": 480,
+            "protein": 30,
+            "fat": 28,
+            "carbs": 25
+          },
+          {
+            "type": "Обед",
+            "name": "Плов, салат",
+            "kcal": 780,
+            "protein": 32,
+            "fat": 30,
+            "carbs": 90
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — верх",
+        "durationMin": 61,
+        "notes": "Хорошее самочувствие",
+        "exercises": [
+          {
+            "id": "bench",
+            "sets": [
+              {
+                "weight": 72.5,
+                "reps": 5
+              },
+              {
+                "weight": 72.5,
+                "reps": 5
+              },
+              {
+                "weight": 67.5,
+                "reps": 8
+              }
+            ]
+          },
+          {
+            "id": "pullups",
+            "sets": [
+              {
+                "weight": 0,
+                "reps": 9
+              },
+              {
+                "weight": 0,
+                "reps": 8
+              },
+              {
+                "weight": 0,
+                "reps": 7
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-09-29": {
+      "weight": 82.1,
+      "tasks": [
+        {
+          "title": "Разобрать почту",
+          "done": true
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": true
+        },
+        {
+          "title": "Купить продукты",
+          "done": false
+        },
+        {
+          "title": "Практика английского 20 мин",
+          "done": true
+        },
+        {
+          "title": "Позвонить родителям",
+          "done": false
+        },
+        {
+          "title": "Прочитать главу книги",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": false,
+        "water": false,
+        "read": false,
+        "nosugar": true,
+        "steps": false,
+        "cold": false
+      },
+      "work": {
+        "hours": 5.7,
+        "notes": "Много созвонов, мало фокуса",
+        "results": [
+          "Задача #101",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Овсянка с бананом и орехами",
+            "kcal": 520,
+            "protein": 18,
+            "fat": 16,
+            "carbs": 78
+          },
+          {
+            "type": "Обед",
+            "name": "Гречка с курицей",
+            "kcal": 650,
+            "protein": 50,
+            "fat": 15,
+            "carbs": 70
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          },
+          {
+            "type": "Перекус",
+            "name": "Протеиновый коктейль",
+            "kcal": 220,
+            "protein": 30,
+            "fat": 4,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-09-30": {
+      "weight": 82,
+      "tasks": [
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        },
+        {
+          "title": "Спланировать завтра",
+          "done": true
+        },
+        {
+          "title": "Практика английского 20 мин",
+          "done": false
+        },
+        {
+          "title": "Растяжка",
+          "done": true
+        },
+        {
+          "title": "Купить продукты",
+          "done": false
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": false,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 5.2,
+        "notes": "Изучал новую библиотеку",
+        "results": [
+          "Задача #102",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Лагман",
+            "kcal": 720,
+            "protein": 35,
+            "fat": 25,
+            "carbs": 85
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          },
+          {
+            "type": "Перекус",
+            "name": "Яблоко и миндаль",
+            "kcal": 250,
+            "protein": 6,
+            "fat": 14,
+            "carbs": 22
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — низ",
+        "durationMin": 63,
+        "notes": "Ноги горят",
+        "exercises": [
+          {
+            "id": "squat",
+            "sets": [
+              {
+                "weight": 100,
+                "reps": 5
+              },
+              {
+                "weight": 100,
+                "reps": 5
+              },
+              {
+                "weight": 100,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "id": "run",
+            "sets": [
+              {
+                "distanceKm": 3.6,
+                "timeMin": 26
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-01": {
+      "weight": 81.7,
+      "tasks": [
+        {
+          "title": "Написать отчёт",
+          "done": true
+        },
+        {
+          "title": "Разобрать почту",
+          "done": true
+        },
+        {
+          "title": "Позвонить родителям",
+          "done": false
+        },
+        {
+          "title": "Практика английского 20 мин",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": false,
+        "cold": false
+      },
+      "work": {
+        "hours": 6.3,
+        "notes": "Исправил баги в релизе",
+        "results": [
+          "Задача #103",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Гречка с курицей",
+            "kcal": 650,
+            "protein": 50,
+            "fat": 15,
+            "carbs": 70
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-10-02": {
+      "weight": 81.7,
+      "tasks": [
+        {
+          "title": "Прочитать главу книги",
+          "done": true
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": true
+        },
+        {
+          "title": "Созвон с командой",
+          "done": false
+        },
+        {
+          "title": "Спланировать завтра",
+          "done": true
+        },
+        {
+          "title": "Уборка 15 мин",
+          "done": true
+        },
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": false,
+        "nosugar": true,
+        "steps": false,
+        "cold": false
+      },
+      "work": {
+        "hours": 6.3,
+        "notes": "Глубокая работа без отвлечений",
+        "results": [
+          "Задача #104",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Плов, салат",
+            "kcal": 780,
+            "protein": 32,
+            "fat": 30,
+            "carbs": 90
+          },
+          {
+            "type": "Ужин",
+            "name": "Лосось и овощи",
+            "kcal": 560,
+            "protein": 42,
+            "fat": 30,
+            "carbs": 20
+          },
+          {
+            "type": "Перекус",
+            "name": "Яблоко и миндаль",
+            "kcal": 250,
+            "protein": 6,
+            "fat": 14,
+            "carbs": 22
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — верх",
+        "durationMin": 71,
+        "notes": "Хорошее самочувствие",
+        "exercises": [
+          {
+            "id": "bench",
+            "sets": [
+              {
+                "weight": 77.5,
+                "reps": 5
+              },
+              {
+                "weight": 77.5,
+                "reps": 5
+              },
+              {
+                "weight": 72.5,
+                "reps": 8
+              }
+            ]
+          },
+          {
+            "id": "pullups",
+            "sets": [
+              {
+                "weight": 0,
+                "reps": 11
+              },
+              {
+                "weight": 0,
+                "reps": 10
+              },
+              {
+                "weight": 0,
+                "reps": 9
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-03": {
+      "weight": 81.6,
+      "tasks": [
+        {
+          "title": "Растяжка",
+          "done": true
+        },
+        {
+          "title": "Код-ревью",
+          "done": false
+        },
+        {
+          "title": "Созвон с командой",
+          "done": true
+        },
+        {
+          "title": "Уборка 15 мин",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": false,
+        "water": false,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 1.1,
+        "notes": "Спроектировал новую фичу",
+        "results": []
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Омлет из 3 яиц, тост",
+            "kcal": 480,
+            "protein": 30,
+            "fat": 28,
+            "carbs": 25
+          },
+          {
+            "type": "Обед",
+            "name": "Плов, салат",
+            "kcal": 780,
+            "protein": 32,
+            "fat": 30,
+            "carbs": 90
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          },
+          {
+            "type": "Перекус",
+            "name": "Протеиновый коктейль",
+            "kcal": 220,
+            "protein": 30,
+            "fat": 4,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-10-04": {
+      "weight": 81.4,
+      "tasks": [
+        {
+          "title": "Код-ревью",
+          "done": true
+        },
+        {
+          "title": "Практика английского 20 мин",
+          "done": true
+        },
+        {
+          "title": "Написать отчёт",
+          "done": true
+        },
+        {
+          "title": "Прочитать главу книги",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 1.5,
+        "notes": "Много созвонов, мало фокуса",
+        "results": []
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Рис с говядиной и овощами",
+            "kcal": 700,
+            "protein": 45,
+            "fat": 22,
+            "carbs": 75
+          },
+          {
+            "type": "Ужин",
+            "name": "Творог, салат",
+            "kcal": 420,
+            "protein": 40,
+            "fat": 12,
+            "carbs": 25
+          },
+          {
+            "type": "Перекус",
+            "name": "Яблоко и миндаль",
+            "kcal": 250,
+            "protein": 6,
+            "fat": 14,
+            "carbs": 22
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-10-05": {
+      "weight": 81.2,
+      "tasks": [
+        {
+          "title": "Код-ревью",
+          "done": true
+        },
+        {
+          "title": "Написать отчёт",
+          "done": true
+        },
+        {
+          "title": "Растяжка",
+          "done": false
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": true
+        },
+        {
+          "title": "Созвон с командой",
+          "done": false
+        }
+      ],
+      "habits": {
+        "wake": false,
+        "water": false,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": false
+      },
+      "work": {
+        "hours": 7.6,
+        "notes": "Подготовил презентацию",
+        "results": [
+          "Задача #107",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Гречка с курицей",
+            "kcal": 650,
+            "protein": 50,
+            "fat": 15,
+            "carbs": 70
+          },
+          {
+            "type": "Ужин",
+            "name": "Лосось и овощи",
+            "kcal": 560,
+            "protein": 42,
+            "fat": 30,
+            "carbs": 20
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — верх",
+        "durationMin": 72,
+        "notes": "Хорошее самочувствие",
+        "exercises": [
+          {
+            "id": "bench",
+            "sets": [
+              {
+                "weight": 80,
+                "reps": 5
+              },
+              {
+                "weight": 80,
+                "reps": 5
+              },
+              {
+                "weight": 75,
+                "reps": 8
+              }
+            ]
+          },
+          {
+            "id": "pullups",
+            "sets": [
+              {
+                "weight": 0,
+                "reps": 11
+              },
+              {
+                "weight": 0,
+                "reps": 10
+              },
+              {
+                "weight": 0,
+                "reps": 9
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-06": {
+      "weight": 81.2,
+      "tasks": [
+        {
+          "title": "Код-ревью",
+          "done": false
+        },
+        {
+          "title": "Прочитать главу книги",
+          "done": true
+        },
+        {
+          "title": "Растяжка",
+          "done": false
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 8,
+        "notes": "Изучал новую библиотеку",
+        "results": [
+          "Задача #108",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Рис с говядиной и овощами",
+            "kcal": 700,
+            "protein": 45,
+            "fat": 22,
+            "carbs": 75
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-10-07": {
+      "weight": 80.9,
+      "tasks": [
+        {
+          "title": "Купить продукты",
+          "done": true
+        },
+        {
+          "title": "Созвон с командой",
+          "done": true
+        },
+        {
+          "title": "Написать отчёт",
+          "done": true
+        },
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        },
+        {
+          "title": "Практика английского 20 мин",
+          "done": true
+        },
+        {
+          "title": "Разобрать почту",
+          "done": false
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": false
+      },
+      "work": {
+        "hours": 5.7,
+        "notes": "Исправил баги в релизе",
+        "results": [
+          "Задача #109",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Омлет из 3 яиц, тост",
+            "kcal": 480,
+            "protein": 30,
+            "fat": 28,
+            "carbs": 25
+          },
+          {
+            "type": "Обед",
+            "name": "Рис с говядиной и овощами",
+            "kcal": 700,
+            "protein": 45,
+            "fat": 22,
+            "carbs": 75
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          },
+          {
+            "type": "Перекус",
+            "name": "Греческий йогурт",
+            "kcal": 180,
+            "protein": 18,
+            "fat": 5,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — низ",
+        "durationMin": 69,
+        "notes": "Ноги горят",
+        "exercises": [
+          {
+            "id": "squat",
+            "sets": [
+              {
+                "weight": 110,
+                "reps": 5
+              },
+              {
+                "weight": 110,
+                "reps": 5
+              },
+              {
+                "weight": 110,
+                "reps": 5
+              }
+            ]
+          },
+          {
+            "id": "run",
+            "sets": [
+              {
+                "distanceKm": 3,
+                "timeMin": 29
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-08": {
+      "weight": 80.7,
+      "tasks": [
+        {
+          "title": "Написать отчёт",
+          "done": true
+        },
+        {
+          "title": "Разобрать почту",
+          "done": true
+        },
+        {
+          "title": "Спланировать завтра",
+          "done": true
+        },
+        {
+          "title": "Уборка 15 мин",
+          "done": false
+        },
+        {
+          "title": "Созвон с командой",
+          "done": true
+        },
+        {
+          "title": "Растяжка",
+          "done": false
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 5.6,
+        "notes": "Глубокая работа без отвлечений",
+        "results": [
+          "Задача #110",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Овсянка с бананом и орехами",
+            "kcal": 520,
+            "protein": 18,
+            "fat": 16,
+            "carbs": 78
+          },
+          {
+            "type": "Обед",
+            "name": "Лагман",
+            "kcal": 720,
+            "protein": 35,
+            "fat": 25,
+            "carbs": 85
+          },
+          {
+            "type": "Ужин",
+            "name": "Лосось и овощи",
+            "kcal": 560,
+            "protein": 42,
+            "fat": 30,
+            "carbs": 20
+          },
+          {
+            "type": "Перекус",
+            "name": "Протеиновый коктейль",
+            "kcal": 220,
+            "protein": 30,
+            "fat": 4,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    },
+    "2026-10-09": {
+      "weight": 80.6,
+      "tasks": [
+        {
+          "title": "Спланировать завтра",
+          "done": true
+        },
+        {
+          "title": "Код-ревью",
+          "done": true
+        },
+        {
+          "title": "Прочитать главу книги",
+          "done": true
+        },
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        },
+        {
+          "title": "Медитация 10 мин",
+          "done": true
+        },
+        {
+          "title": "Купить продукты",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": false,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 5.4,
+        "notes": "Исправил баги в релизе",
+        "results": [
+          "Задача #111",
+          "Ревью PR"
+        ]
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Плов, салат",
+            "kcal": 780,
+            "protein": 32,
+            "fat": 30,
+            "carbs": 90
+          },
+          {
+            "type": "Ужин",
+            "name": "Лосось и овощи",
+            "kcal": 560,
+            "protein": 42,
+            "fat": 30,
+            "carbs": 20
+          },
+          {
+            "type": "Перекус",
+            "name": "Греческий йогурт",
+            "kcal": 180,
+            "protein": 18,
+            "fat": 5,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — верх",
+        "durationMin": 79,
+        "notes": "Хорошее самочувствие",
+        "exercises": [
+          {
+            "id": "bench",
+            "sets": [
+              {
+                "weight": 85,
+                "reps": 5
+              },
+              {
+                "weight": 85,
+                "reps": 5
+              },
+              {
+                "weight": 80,
+                "reps": 8
+              }
+            ]
+          },
+          {
+            "id": "pullups",
+            "sets": [
+              {
+                "weight": 0,
+                "reps": 11
+              },
+              {
+                "weight": 0,
+                "reps": 10
+              },
+              {
+                "weight": 0,
+                "reps": 9
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-10": {
+      "weight": 80.7,
+      "tasks": [
+        {
+          "title": "Разобрать почту",
+          "done": true
+        },
+        {
+          "title": "Растяжка",
+          "done": true
+        },
+        {
+          "title": "Уборка 15 мин",
+          "done": true
+        },
+        {
+          "title": "Спланировать завтра",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": true
+      },
+      "work": {
+        "hours": 2.4,
+        "notes": "Изучал новую библиотеку",
+        "results": []
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Омлет из 3 яиц, тост",
+            "kcal": 480,
+            "protein": 30,
+            "fat": 28,
+            "carbs": 25
+          },
+          {
+            "type": "Обед",
+            "name": "Рис с говядиной и овощами",
+            "kcal": 700,
+            "protein": 45,
+            "fat": 22,
+            "carbs": 75
+          },
+          {
+            "type": "Ужин",
+            "name": "Творог, салат",
+            "kcal": 420,
+            "protein": 40,
+            "fat": 12,
+            "carbs": 25
+          },
+          {
+            "type": "Перекус",
+            "name": "Греческий йогурт",
+            "kcal": 180,
+            "protein": 18,
+            "fat": 5,
+            "carbs": 12
+          }
+        ]
+      },
+      "workout": {
+        "type": "Силовая — верх",
+        "durationMin": 70,
+        "notes": "Хорошее самочувствие",
+        "exercises": [
+          {
+            "id": "bench",
+            "sets": [
+              {
+                "weight": 85,
+                "reps": 5
+              },
+              {
+                "weight": 85,
+                "reps": 5
+              },
+              {
+                "weight": 80,
+                "reps": 8
+              }
+            ]
+          },
+          {
+            "id": "pullups",
+            "sets": [
+              {
+                "weight": 0,
+                "reps": 12
+              },
+              {
+                "weight": 0,
+                "reps": 11
+              },
+              {
+                "weight": 0,
+                "reps": 10
+              }
+            ]
+          }
+        ]
+      },
+      "note": ""
+    },
+    "2026-10-11": {
+      "weight": 80.7,
+      "tasks": [
+        {
+          "title": "Позвонить родителям",
+          "done": true
+        },
+        {
+          "title": "Код-ревью",
+          "done": true
+        },
+        {
+          "title": "Уборка 15 мин",
+          "done": true
+        },
+        {
+          "title": "Разобрать почту",
+          "done": true
+        }
+      ],
+      "habits": {
+        "wake": true,
+        "water": true,
+        "read": true,
+        "nosugar": true,
+        "steps": true,
+        "cold": false
+      },
+      "work": {
+        "hours": 1,
+        "notes": "Спроектировал новую фичу",
+        "results": []
+      },
+      "nutrition": {
+        "meals": [
+          {
+            "type": "Завтрак",
+            "name": "Сырники со сметаной",
+            "kcal": 550,
+            "protein": 32,
+            "fat": 20,
+            "carbs": 55
+          },
+          {
+            "type": "Обед",
+            "name": "Гречка с курицей",
+            "kcal": 650,
+            "protein": 50,
+            "fat": 15,
+            "carbs": 70
+          },
+          {
+            "type": "Ужин",
+            "name": "Куриная грудка, картофель",
+            "kcal": 600,
+            "protein": 50,
+            "fat": 14,
+            "carbs": 60
+          }
+        ]
+      },
+      "workout": null,
+      "note": ""
+    }
+  }
+}
