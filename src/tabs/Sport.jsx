@@ -3,6 +3,7 @@ import { LineChart, Line, AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveCont
 import { Dumbbell, Trophy, Scale, Timer, Activity } from 'lucide-react';
 import { Card, CardTitle, SectionHeader, Stat, Delta, ChartTooltip, Segmented, Empty, Ring, Bar } from '../components/ui.jsx';
 import MonthCalendar from '../components/MonthCalendar.jsx';
+import Warmup from '../components/Warmup.jsx';
 import { fmtNum, fmtShort, fmtLong, exerciseSeries, latestWeight, weightGoal, addDays, monthDates } from '../lib.js';
 
 const COLORS = ['#38bdf8', '#a78bfa', '#34d399', '#fb923c', '#f472b6'];
@@ -10,6 +11,8 @@ const COLORS = ['#38bdf8', '#a78bfa', '#34d399', '#fb923c', '#f472b6'];
 export default function Sport({ data, model }) {
   const { exercises, targets } = data;
   const [exId, setExId] = useState(exercises[0]?.id);
+  const [view, setView] = useState('stats');
+  const warmup = data.sport?.warmup || [];
   const dates = model.allDates.filter((d) => d <= model.today);
   const workouts = dates.filter((d) => model.get(d)?.workout).map((d) => ({ date: d, ...model.get(d).workout }));
   const totalMin = workouts.reduce((s, w) => s + (w.durationMin || 0), 0);
@@ -24,7 +27,9 @@ export default function Sport({ data, model }) {
 
   return (
     <div>
-      <SectionHeader title="Спорт" subtitle="Тренировки, рекорды и вес" />
+      <SectionHeader title="Спорт" subtitle={view === 'warmup' ? 'Разминка перед тренировкой' : 'Тренировки, рекорды и вес'}
+        right={<Segmented options={[{ value: 'stats', label: 'Статистика' }, { value: 'warmup', label: 'Разминка' }]} value={view} onChange={setView} />} />
+      {view === 'warmup' ? <Warmup items={warmup} /> : <>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
         <Stat label="Тренировок" value={workouts.length} sub={`за ${dates.length} дн.`} icon={Dumbbell} accent="text-sky-400" />
         <Stat label="Время в зале" value={fmtNum(totalMin / 60, 1)} unit="ч" sub={`≈ ${Math.round(totalMin / (workouts.length || 1))} мин за тренировку`} icon={Timer} accent="text-sky-400" />
@@ -144,6 +149,7 @@ export default function Sport({ data, model }) {
           ))}
         </div>
       </Card>
+      </>}
     </div>
   );
 }

@@ -85,6 +85,115 @@
     }
   ],
   "exercises": [],
+  "sport": {
+    "warmup": [
+      {
+        "id": "head-forward-back",
+        "name": "Наклоны головы вперёд-назад",
+        "reps": "20",
+        "tip": "Корпус неподвижен, двигайтесь плавно",
+        "image": "sport/warmup/01-head-forward-back.webp"
+      },
+      {
+        "id": "head-side",
+        "name": "Наклоны головы в стороны",
+        "reps": "20",
+        "tip": "Ухо к плечу, плечи не поднимать",
+        "image": "sport/warmup/02-head-side.webp"
+      },
+      {
+        "id": "wrists",
+        "name": "Вращения кистями в замке",
+        "reps": "50",
+        "tip": "Пальцы в замке, предплечья почти неподвижны",
+        "image": "sport/warmup/03-wrists.webp"
+      },
+      {
+        "id": "elbows-in",
+        "name": "Вращения в локтях внутрь",
+        "reps": "20",
+        "tip": "Плечи в стороны параллельно полу, крутится только предплечье",
+        "image": "sport/warmup/04-elbows-in.webp"
+      },
+      {
+        "id": "elbows-out",
+        "name": "Вращения в локтях наружу",
+        "reps": "20",
+        "tip": "То же, в обратную сторону",
+        "image": "sport/warmup/05-elbows-out.webp"
+      },
+      {
+        "id": "arm-extensions",
+        "name": "Резкие разгибания рук в стороны",
+        "reps": "20",
+        "tip": "Из согнутых у груди резко выпрямить в стороны",
+        "image": "sport/warmup/06-arm-extensions.webp"
+      },
+      {
+        "id": "shoulder-rolls",
+        "name": "Вращения плечами",
+        "reps": "по 10 назад и вперёд",
+        "tip": "Руки расслаблены, работают только плечи",
+        "image": "sport/warmup/07-shoulder-rolls.webp"
+      },
+      {
+        "id": "arm-swings-up",
+        "name": "Махи прямыми руками вверх",
+        "reps": "20",
+        "tip": "Обе руки снизу до вертикали над головой",
+        "image": "sport/warmup/08-arm-swings-up.webp"
+      },
+      {
+        "id": "arm-cross",
+        "name": "Скрещивания рук перед грудью",
+        "reps": "20",
+        "tip": "Широко развести, скрестить, чередовать верхнюю руку",
+        "image": "sport/warmup/09-arm-cross.webp"
+      },
+      {
+        "id": "alt-arm-swings",
+        "name": "Попеременные махи руками",
+        "reps": "20",
+        "tip": "Одна прямая рука вверх, другая вниз-назад, корпус ровный",
+        "image": "sport/warmup/10-alt-arm-swings.webp"
+      },
+      {
+        "id": "arm-circles-forward",
+        "name": "Круги руками вперёд",
+        "reps": "20",
+        "tip": "Прямые руки, большие круги",
+        "image": "sport/warmup/11-arm-circles-forward.webp"
+      },
+      {
+        "id": "arm-circles-back",
+        "name": "Круги руками назад",
+        "reps": "20",
+        "tip": "Локти прямые",
+        "image": "sport/warmup/12-arm-circles-back.webp"
+      },
+      {
+        "id": "arm-twists",
+        "name": "Скручивания прямых рук",
+        "reps": "20",
+        "tip": "Руки в стороны, крутить всю руку вокруг оси от плеча",
+        "image": "sport/warmup/13-arm-twists.webp"
+      },
+      {
+        "id": "torso-twists",
+        "name": "Повороты корпуса",
+        "reps": "20",
+        "tip": "Руки у груди, таз смотрит вперёд",
+        "image": "sport/warmup/14-torso-twists.webp"
+      },
+      {
+        "id": "side-bends",
+        "name": "Наклоны в стороны",
+        "reps": "20",
+        "tip": "Рука на поясе, другая вверх, наклон строго в сторону",
+        "image": "sport/warmup/15-side-bends.webp"
+      }
+    ]
+  },
   "goals": {
     "month": [
       {
