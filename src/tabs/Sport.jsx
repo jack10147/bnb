@@ -4,6 +4,7 @@ import { Dumbbell, Trophy, Scale, Timer, Activity } from 'lucide-react';
 import { Card, CardTitle, SectionHeader, Stat, Delta, ChartTooltip, Segmented, Empty, Ring, Bar } from '../components/ui.jsx';
 import MonthCalendar from '../components/MonthCalendar.jsx';
 import Warmup from '../components/Warmup.jsx';
+import Timers from '../components/Timers.jsx';
 import { fmtNum, fmtShort, fmtLong, exerciseSeries, latestWeight, weightGoal, addDays, monthDates } from '../lib.js';
 
 const COLORS = ['#38bdf8', '#a78bfa', '#34d399', '#fb923c', '#f472b6'];
@@ -29,6 +30,7 @@ export default function Sport({ data, model }) {
     <div>
       <SectionHeader title="Спорт" subtitle={view === 'warmup' ? 'Разминка перед тренировкой' : 'Тренировки, рекорды и вес'}
         right={<Segmented options={[{ value: 'stats', label: 'Статистика' }, { value: 'warmup', label: 'Разминка' }]} value={view} onChange={setView} />} />
+      <Timers />
       {view === 'warmup' ? <Warmup items={warmup} /> : <>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
         <Stat label="Тренировок" value={workouts.length} sub={`за ${dates.length} дн.`} icon={Dumbbell} accent="text-sky-400" />
