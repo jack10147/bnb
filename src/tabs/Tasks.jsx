@@ -200,6 +200,21 @@ export default function Tasks({ data, model }) {
         </ul>
       </Card>
 
+      {(data.taskListHistory || []).filter((h) => h.month !== month).map((h) => (
+        <Card key={h.month} className="mb-4">
+          <CardTitle icon={CalendarDays} color="text-slate-400">{h.label || monthLabel(h.month)} · архив</CardTitle>
+          <ul className="space-y-2">
+            {(h.items || []).map((t) => (
+              <li key={t.id || t.title} className="flex items-center gap-3 rounded-xl bg-white/[.03] px-3 py-2.5 text-sm">
+                {t.done ? <CheckCircle2 size={18} className="text-violet-400 shrink-0" /> : <Circle size={18} className="text-slate-600 shrink-0" />}
+                <span className={`flex-1 ${t.done ? 'text-slate-500 line-through' : 'text-slate-300'}`}>{t.title}</span>
+                {!t.done && t.movedTo && <span className="text-[11px] text-sky-400">→ {monthLabel(t.movedTo)}</span>}
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ))}
+
       <MyTasks today={model.today} minMonth={minMonth} maxMonth={maxMonth} />
 
       <Card>

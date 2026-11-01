@@ -4,11 +4,11 @@
     "owner": "",
     "sample": false,
     "startDate": "2026-10-01",
-    "durationDays": 30,
+    "durationDays": 179,
     "longTermEndDate": "2027-03-28",
     "timezone": "Asia/Almaty",
     "hideFinance": false,
-    "lastUpdated": "2026-10-06T23:20:17+05:00"
+    "lastUpdated": "2026-11-01T22:55:00+05:00"
   },
   "profile": {
     "age": 23,
@@ -604,8 +604,8 @@
     }
   },
   "taskList": {
-    "month": "2026-10",
-    "label": "Задачи на октябрь",
+    "month": "2026-11",
+    "label": "Задачи на ноябрь",
     "items": [
       {
         "id": "macbook",
@@ -630,13 +630,49 @@
         "title": "Купить мышку Logitech",
         "done": false,
         "date": null
-      },
-      {
-        "id": "toothbrush",
-        "title": "Купить зубную щётку",
-        "done": false,
-        "date": null
       }
     ]
-  }
+  },
+  "taskListHistory": [
+    {
+      "month": "2026-10",
+      "label": "Задачи на октябрь",
+      "items": [
+        {
+          "id": "macbook",
+          "title": "Купить MacBook Pro",
+          "done": false,
+          "date": null,
+          "movedTo": "2026-11"
+        },
+        {
+          "id": "dentist",
+          "title": "Сходить к стоматологу",
+          "done": false,
+          "date": null,
+          "movedTo": "2026-11"
+        },
+        {
+          "id": "checkup",
+          "title": "Сделать чекап",
+          "done": false,
+          "date": null,
+          "movedTo": "2026-11"
+        },
+        {
+          "id": "mouse",
+          "title": "Купить мышку Logitech",
+          "done": false,
+          "date": null,
+          "movedTo": "2026-11"
+        },
+        {
+          "id": "toothbrush",
+          "title": "Купить зубную щётку",
+          "done": true,
+          "date": null
+        }
+      ]
+    }
+  ]
 }

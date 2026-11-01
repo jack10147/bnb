@@ -3,7 +3,7 @@ import { AreaChart, Area, ComposedChart, Line, ResponsiveContainer, XAxis, YAxis
 import { Scale, Flame, ListChecks, Trophy, CheckCircle2, Circle, Snowflake, Utensils, TrendingDown, Goal, CalendarDays, Wallet } from 'lucide-react';
 import { Card, CardTitle, Ring, Bar, Delta, ChartTooltip, Empty } from '../components/ui.jsx';
 import MonthCalendar from '../components/MonthCalendar.jsx';
-import { fmtNum, fmtShort, fmtLong, dayNutrition, dayTasks, dayHabits, habitStreak, exerciseSeries, latestWeight, pct, arcWeek, plural, addDays, weekday, diffDays, habitDone, habitFrac, weightGoal, habitDayCell, perfectDaysStreak, monthDates, sumPnlUsd, fmtUsd, isFinanceHidden } from '../lib.js';
+import { fmtNum, fmtShort, fmtLong, dayNutrition, dayTasks, dayHabits, habitStreak, exerciseSeries, latestWeight, pct, arcWeek, plural, addDays, weekday, diffDays, habitDone, habitFrac, weightGoal, habitDayCell, perfectDaysStreak, monthDates, sumPnlUsd, fmtUsd, isFinanceHidden, monthLabel } from '../lib.js';
 
 export default function Overview({ data, model, onToggleHabit }) {
   const { targets, habits, meta } = data;
@@ -67,7 +67,7 @@ export default function Overview({ data, model, onToggleHabit }) {
             <h1 className="mt-1 text-3xl sm:text-5xl font-semibold text-white tracking-tight">
               День {Math.max(0, Math.min(model.dayNum, meta.durationDays))} <span className="text-slate-500">из {meta.durationDays}</span>
             </h1>
-            <p className="text-slate-400 mt-2 text-sm">Неделя {week} · осталось {Math.max(0, meta.durationDays - model.dayNum)} {plural(Math.max(0, meta.durationDays - model.dayNum), 'день', 'дня', 'дней')} до конца месяца</p>
+            <p className="text-slate-400 mt-2 text-sm">Неделя {week} · осталось {Math.max(0, meta.durationDays - model.dayNum)} {plural(Math.max(0, meta.durationDays - model.dayNum), 'день', 'дня', 'дней')} до конца арки</p>
             <div className="mt-4 max-w-xl">
               <Bar value={monthPct} className="h-2.5" />
               <div className="flex justify-between text-[11px] text-slate-500 mt-1.5"><span>{fmtShort(meta.startDate)}</span><span>{fmtShort(addDays(meta.startDate, meta.durationDays - 1))}</span></div>
@@ -199,7 +199,7 @@ export default function Overview({ data, model, onToggleHabit }) {
           </Card>
         ) : (
         <Card>
-          <CardTitle icon={Wallet} color="text-emerald-400" right={<a href="#/finance" className="text-xs text-sky-400 hover:underline">Финансы →</a>}>План октября</CardTitle>
+          <CardTitle icon={Wallet} color="text-emerald-400" right={<a href="#/finance" className="text-xs text-sky-400 hover:underline">Финансы →</a>}>План · {monthLabel(((data.goals?.month || []).find((g) => g.auto === 'financeUsd')?.month) || model.today.slice(0, 7))}</CardTitle>
           {(() => {
             const finGoal = (data.goals?.month || []).find((g) => g.auto === 'financeUsd');
             const ym = finGoal?.month || model.today.slice(0, 7);

@@ -58,13 +58,13 @@ export default function Goals({ data, model }) {
   const mAvg = avg(goals.month), sAvg = avg(goals.sixMonth);
   const sixTotal = diffDays(meta.startDate, meta.longTermEndDate);
   const sixElapsed = pct(Math.max(0, model.dayNum), sixTotal);
-  const monthElapsed = pct(Math.min(model.dayNum, meta.durationDays), meta.durationDays);
+  const monthElapsed = pct(Math.min(model.dayNum, 30), 30);
   return (
     <div>
       <SectionHeader title="Цели" subtitle="Прогресс по целям месяца и полугодия" />
       <div className="grid sm:grid-cols-2 gap-3 md:gap-4 mb-4">
         {[
-          { label: 'Цели месяца', v: mAvg, n: goals.month.length, time: monthElapsed, color: '#38bdf8', sub: `${fmtShort(meta.startDate)} — ${meta.durationDays} дней` },
+          { label: 'Цели месяца', v: mAvg, n: goals.month.length, time: monthElapsed, color: '#38bdf8', sub: `${fmtShort(meta.startDate)} — 30 дней` },
           { label: 'Цели на 6 месяцев', v: sAvg, n: goals.sixMonth.length, time: sixElapsed, color: '#a78bfa', sub: `до ${fmtShort(meta.longTermEndDate)}` },
         ].map((x) => (
           <Card key={x.label} className="flex items-center gap-5">

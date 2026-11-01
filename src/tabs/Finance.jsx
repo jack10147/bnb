@@ -2,7 +2,7 @@ import React from 'react';
 import { Wallet, TrendingUp, TrendingDown, CircleDollarSign, Landmark } from 'lucide-react';
 import { Card, CardTitle, SectionHeader, Stat, Ring, Bar } from '../components/ui.jsx';
 import MonthCalendar from '../components/MonthCalendar.jsx';
-import { addDays, fmtUsd, fmtUsdCell, sumPnlUsd, currentBalanceUsd } from '../lib.js';
+import { addDays, fmtUsd, fmtUsdCell, sumPnlUsd, currentBalanceUsd, monthLabel } from '../lib.js';
 import Expenses from '../components/Expenses.jsx';
 
 export default function Finance({ data, model }) {
@@ -33,7 +33,7 @@ export default function Finance({ data, model }) {
 
   return (
     <div>
-      <SectionHeader title="Финансы" subtitle="План на октябрь. На календаре и в итогах — доллары." />
+      <SectionHeader title="Финансы" subtitle={`План · ${monthLabel(month)}. На календаре и в итогах — доллары.`} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
         <Card className="col-span-2 flex items-center gap-4">
           <Ring value={progress} size={92} stroke={9} color={netUsd < 0 ? '#fb7185' : '#34d399'}>
@@ -92,7 +92,7 @@ export default function Finance({ data, model }) {
           ]}
         />
         <p className="text-xs text-slate-500 mt-3 leading-relaxed">
-          Цель октября {goalUsd == null ? '—' : fmtUsd(goalUsd, 0)}. Суммы на календаре в долларах. Пустые клетки — дни без записи.
+          Цель ({monthLabel(month)}) {goalUsd == null ? '—' : fmtUsd(goalUsd, 0)}. Суммы на календаре в долларах. Пустые клетки — дни без записи.
         </p>
       </Card>
 
