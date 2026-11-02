@@ -1,4 +1,4 @@
-import { uploadBlob, commitChange } from './api.js';
+import { uploadBlob, commitChange, newId } from './api.js';
 
 export const MAX_SIDE = 2560, THUMB_SIDE = 400, QUALITY = 0.85, THUMB_QUALITY = 0.75, CHUNK = 20;
 
@@ -67,17 +67,18 @@ export async function processImage(file) {
   return { full, thumb, takenAt: await exifDate(file) };
 }
 
-const rid = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 // Загрузка пачки: файлы обрабатываются по очереди (экономим память на iPhone), коммит на каждые CHUNK фото.
-export async function uploadFiles(token, files, onProgress = () => {}) {
+export async function uploadFiles(token, files, onProgress = () => {}, album = null) {
   const errors = []; let done = 0, pending = [];
   const flush = async () => {
     if (!pending.length) return;
     const batch = pending; pending = [];
     await commitChange(token, {
-      files: batch.flatMap((b) => b.files),
-      mutate: (ph) => [...batch.map((b) => b.entry), ...ph],
+      build: (m) => ({
+        files: batch.flatMap((b) => b.files),
+        manifest: { ...m, photos: [...batch.map((b) => ({ ...b.entry, album: album && m.albums.some((a) => a.id === album) ? album : null })), ...m.photos] },
+      }),
       message: `Upload ${batch.length} photo(s)`,
     });
     done += batch.length;
@@ -86,12 +87,12 @@ export async function uploadFiles(token, files, onProgress = () => {}) {
   for (const file of files) {
     try {
       const { full, thumb, takenAt } = await processImage(file);
-      const id = rid(), ym = new Date().toISOString().slice(0, 7);
+      const id = newId(), ym = album || 'unsorted';
       const path = `photos/${ym}/${id}.jpg`, tpath = `thumbs/${ym}/${id}.jpg`;
       const [s1, s2] = await Promise.all([uploadBlob(token, full.blob), uploadBlob(token, thumb.blob)]);
       pending.push({
         files: [{ path, sha: s1 }, { path: tpath, sha: s2 }],
-        entry: { id, path, thumb: tpath, w: full.w, h: full.h, size: full.blob.size, name: file.name || '', takenAt, uploadedAt: new Date().toISOString() },
+        entry: { id, path, thumb: tpath, sha: s1, tsha: s2, w: full.w, h: full.h, size: full.blob.size, name: file.name || '', takenAt, uploadedAt: new Date().toISOString() },
       });
     } catch (e) {
       errors.push({ name: file.name || 'файл', error: e.message });
