@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Receipt, Trash2, CalendarRange, CalendarDays, PiggyBank, PieChart as PieIcon, Banknote, CreditCard, Wallet, Gauge, CalendarClock, Plus, X, ChevronDown } from 'lucide-react';
 import { Card, CardTitle, Empty } from './ui.jsx';
+import ExpenseCalendar from './ExpenseCalendar.jsx';
 import {
   EXPENSE_CATEGORIES, guessExpenseCategory, fmtKzt, fmtShort, monthLabel,
   readExpenses, writeExpenses, mergeExpenses, expenseSnapshot, monthSpendSlices,
@@ -311,6 +312,8 @@ export default function Expenses({ data, today }) {
           </div>
         )}
       </Card>
+
+      <ExpenseCalendar rows={merged} today={today} />
 
       <Card className="mb-4">
         <CardTitle icon={Receipt} color="text-emerald-400">Новая запись</CardTitle>
