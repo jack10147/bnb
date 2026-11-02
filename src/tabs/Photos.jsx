@@ -5,12 +5,6 @@ import { getToken, setToken, checkToken, loadManifest, deletePhotos, movePhotos,
 import { uploadFiles } from '../photos/image.js';
 
 const dateOf = (p) => p.takenAt || p.uploadedAt || '';
-const monthLabel = (iso) => {
-  const d = new Date(iso.length <= 19 ? iso : iso);
-  if (isNaN(d)) return 'Без даты';
-  const s = d.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }).replace(' г.', '');
-  return s[0].toUpperCase() + s.slice(1);
-};
 
 function Connect({ token, onChange }) {
   const [open, setOpen] = useState(false);
@@ -185,10 +179,6 @@ export default function Photos() {
   const albumOf = (p) => (p.album && known.has(p.album) ? p.album : NONE);
   const all = useMemo(() => photos.slice().sort((a, b) => dateOf(b).localeCompare(dateOf(a))), [photos]);
   const sorted = useMemo(() => (album === ALL || !album ? all : all.filter((p) => albumOf(p) === album)), [all, album, known]);
-  const groups = useMemo(() => {
-    const g = []; sorted.forEach((p, i) => { const l = monthLabel(dateOf(p)); if (!g.length || g[g.length - 1].label !== l) g.push({ label: l, items: [] }); g[g.length - 1].items.push({ p, i }); });
-    return g;
-  }, [sorted]);
   const cur = albums.find((a) => a.id === album);
   const title = album === ALL ? 'Все фото' : album === NONE ? 'Без альбома' : cur?.name;
 
@@ -283,19 +273,14 @@ export default function Photos() {
         </div>
         {!sel && uploadCard}
         {sorted.length === 0 && man && <div className="text-center py-16 text-slate-500"><Images className="mx-auto mb-3 opacity-50" size={40} />Пока нет фото{!token && <div className="text-xs mt-1">Подключите загрузку на экране альбомов</div>}</div>}
-        {groups.map((g) => (
-          <div key={g.label} className="mb-5">
-            <div className="text-sm font-semibold text-slate-200 mb-2">{g.label}</div>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-0.5 -mx-4 md:mx-0">
-              {g.items.map(({ p, i }) => (
-                <button key={p.id} onClick={() => (sel ? toggle(p.id) : setView(i))} className="relative aspect-square bg-white/[.04] overflow-hidden">
-                  <img src={rawUrl(p.thumb)} loading="lazy" decoding="async" alt="" className={`w-full h-full object-cover ${sel?.has(p.id) ? 'opacity-60 scale-95' : ''} transition`} />
-                  {sel && <CheckCircle2 size={22} className={`absolute bottom-1 right-1 ${sel.has(p.id) ? 'text-sky-400 fill-white' : 'text-white/70'}`} />}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+        {sorted.length > 0 && <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-0.5 -mx-4 md:mx-0 mb-5">
+          {sorted.map((p, i) => (
+            <button key={p.id} onClick={() => (sel ? toggle(p.id) : setView(i))} className="relative aspect-square bg-white/[.04] overflow-hidden">
+              <img src={rawUrl(p.thumb)} loading="lazy" decoding="async" alt="" className={`w-full h-full object-cover ${sel?.has(p.id) ? 'opacity-60 scale-95' : ''} transition`} />
+              {sel && <CheckCircle2 size={22} className={`absolute bottom-1 right-1 ${sel.has(p.id) ? 'text-sky-400 fill-white' : 'text-white/70'}`} />}
+            </button>
+          ))}
+        </div>}
         {sel && sel.size > 0 && <div className="fixed inset-x-0 bottom-[calc(56px+env(safe-area-inset-bottom))] md:bottom-4 z-40 px-4">
           <div className="max-w-xl mx-auto flex items-center gap-2 bg-[#121a2b] border border-white/10 rounded-2xl p-2 shadow-xl">
             <span className="text-sm text-slate-300 px-2">{sel.size} выбр.</span>
