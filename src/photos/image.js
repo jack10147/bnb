@@ -92,7 +92,7 @@ export async function uploadFiles(token, files, onProgress = () => {}, album = n
       const [s1, s2] = await Promise.all([uploadBlob(token, full.blob), uploadBlob(token, thumb.blob)]);
       pending.push({
         files: [{ path, sha: s1 }, { path: tpath, sha: s2 }],
-        entry: { id, path, thumb: tpath, sha: s1, tsha: s2, w: full.w, h: full.h, size: full.blob.size, name: file.name || '', takenAt, uploadedAt: new Date().toISOString() },
+        entry: { id, path, thumb: tpath, sha: s1, tsha: s2, w: full.w, h: full.h, size: full.blob.size, tsize: thumb.blob.size, name: file.name || '', takenAt, uploadedAt: new Date().toISOString() },
       });
     } catch (e) {
       errors.push({ name: file.name || 'файл', error: e.message });

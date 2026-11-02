@@ -146,3 +146,8 @@ export function deleteAlbum(token, id, withPhotos) {
     return { files, manifest: { ...m, albums: m.albums.filter((a) => a.id !== id), photos } };
   } });
 }
+
+// Реальный размер репозитория (КБ) из GitHub API; null при ошибке/лимите.
+export async function repoSizeKB() {
+  try { const r = await gh(''); return typeof r.size === 'number' ? r.size : null; } catch { return null; }
+}

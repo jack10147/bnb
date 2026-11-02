@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Images, Upload, KeyRound, X, ChevronLeft, ChevronRight, Download, ExternalLink, Trash2, RefreshCw, FolderPlus, Folder, Pencil, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Card, SectionHeader } from '../components/ui.jsx';
-import { getToken, setToken, checkToken, loadManifest, deletePhotos, movePhotos, createAlbum, renameAlbum, deleteAlbum, rawUrl, OWNER, REPO } from '../photos/api.js';
+import { getToken, setToken, checkToken, loadManifest, deletePhotos, movePhotos, createAlbum, renameAlbum, deleteAlbum, rawUrl, repoSizeKB, OWNER, REPO } from '../photos/api.js';
 import { uploadFiles } from '../photos/image.js';
 
 const dateOf = (p) => p.takenAt || p.uploadedAt || '';
@@ -116,15 +116,44 @@ function Viewer({ photos, index, setIndex, onClose, onDelete, canDelete }) {
 
 
 const ALL = 'all', NONE = 'none';
+const LIMIT = 1024 ** 3; // мягкий лимит GitHub ~1 ГБ
+const pBytes = (p) => (p.size || 0) + (p.tsize || 0);
+const sumBytes = (ps) => ps.reduce((s, p) => s + pBytes(p), 0);
+const fmtSize = (b) => {
+  if (!b) return '0 Б';
+  const u = [['ГБ', 1024 ** 3], ['МБ', 1024 ** 2], ['КБ', 1024]].find(([, v]) => b >= v);
+  if (!u) return `${b} Б`;
+  return `${(b / u[1]).toFixed(1).replace('.', ',')} ${u[0]}`;
+};
 
-function AlbumCard({ name, count, cover, onClick }) {
+function StorageCard({ used, count, repoKB }) {
+  const repo = repoKB != null && repoKB > 0 ? repoKB * 1024 : null;
+  const taken = Math.max(used, repo || 0);
+  const pct = Math.min(100, (taken / LIMIT) * 100);
+  return (
+    <Card className="mb-4">
+      <div className="flex items-baseline justify-between gap-2">
+        <div className="text-sm text-slate-100">Занято <b>{fmtSize(taken)}</b> из ~1 ГБ</div>
+        <div className="text-xs text-slate-500 shrink-0">{count} фото</div>
+      </div>
+      <div className="h-2 rounded-full bg-white/[.08] mt-2 overflow-hidden"><div className={`h-full rounded-full ${pct > 80 ? 'bg-rose-400' : 'bg-sky-400'}`} style={{ width: `${pct}%` }} /></div>
+      <div className="text-xs text-slate-400 mt-2">Свободно ~{fmtSize(Math.max(0, LIMIT - taken))}</div>
+      <div className="text-[11px] text-slate-500 mt-1 leading-snug">
+        Фото сейчас: {fmtSize(used)} · репозиторий по GitHub: {repo ? fmtSize(repo) : '—'}.
+        Лимит примерный; удалённые фото остаются в истории git, поэтому реальный размер может быть больше.
+      </div>
+    </Card>
+  );
+}
+
+function AlbumCard({ name, count, bytes, cover, onClick }) {
   return (
     <button onClick={onClick} className="text-left">
       <div className="aspect-square rounded-2xl overflow-hidden bg-white/[.05] flex items-center justify-center">
         {cover ? <img src={rawUrl(cover.thumb)} loading="lazy" alt="" className="w-full h-full object-cover" /> : <Folder size={36} className="text-slate-600" />}
       </div>
       <div className="mt-1.5 text-sm text-slate-100 truncate">{name}</div>
-      <div className="text-xs text-slate-500">{count}</div>
+      <div className="text-xs text-slate-500">{count} фото · {fmtSize(bytes)}</div>
     </button>
   );
 }
@@ -147,6 +176,8 @@ export default function Photos() {
     catch (e) { setErr(e.message); setMan((m) => m || { albums: [], photos: [] }); }
   }, [token]);
   useEffect(() => { load(); }, [load]);
+  const [repoKB, setRepoKB] = useState(null);
+  useEffect(() => { repoSizeKB().then(setRepoKB); }, [man?.sha]);
   useEffect(() => { setSel(null); setView(null); }, [album]);
 
   const photos = man?.photos || [], albums = man?.albums || [];
@@ -233,18 +264,19 @@ export default function Photos() {
           right={<div className="flex gap-1">
             {token && <button disabled={busyOp} onClick={newAlbum} className={iconBtn} aria-label="Новый альбом"><FolderPlus size={18} /></button>}
             <button onClick={load} aria-label="Обновить" className={iconBtn}><RefreshCw size={16} /></button></div>} />
+        {man && <StorageCard used={sumBytes(photos)} count={photos.length} repoKB={repoKB} />}
         {uploadCard}
         {err && <div className="text-sm text-rose-300 mb-3">{err}</div>}
         {man && <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
-          <AlbumCard name="Все фото" count={photos.length} cover={all[0]} onClick={() => setAlbum(ALL)} />
-          {(all.some((p) => albumOf(p) === NONE) || !albums.length) && <AlbumCard name="Без альбома" count={all.filter((p) => albumOf(p) === NONE).length} cover={all.find((p) => albumOf(p) === NONE)} onClick={() => setAlbum(NONE)} />}
-          {albums.map((a) => { const ps = all.filter((p) => p.album === a.id); return <AlbumCard key={a.id} name={a.name} count={ps.length} cover={ps[0]} onClick={() => setAlbum(a.id)} />; })}
+          <AlbumCard name="Все фото" count={photos.length} bytes={sumBytes(photos)} cover={all[0]} onClick={() => setAlbum(ALL)} />
+          {(all.some((p) => albumOf(p) === NONE) || !albums.length) && <AlbumCard name="Без альбома" count={all.filter((p) => albumOf(p) === NONE).length} bytes={sumBytes(all.filter((p) => albumOf(p) === NONE))} cover={all.find((p) => albumOf(p) === NONE)} onClick={() => setAlbum(NONE)} />}
+          {albums.map((a) => { const ps = all.filter((p) => p.album === a.id); return <AlbumCard key={a.id} name={a.name} count={ps.length} bytes={sumBytes(ps)} cover={ps[0]} onClick={() => setAlbum(a.id)} />; })}
           {token && <button disabled={busyOp} onClick={newAlbum} className="text-left"><div className="aspect-square rounded-2xl border-2 border-dashed border-white/10 flex items-center justify-center text-slate-500"><FolderPlus size={32} /></div><div className="mt-1.5 text-sm text-slate-400">Новый альбом</div></button>}
         </div>}
       </> : <>
         <div className="flex items-center gap-1 mb-4">
           <button onClick={() => setAlbum(null)} className={iconBtn} aria-label="Альбомы"><ArrowLeft size={20} /></button>
-          <div className="min-w-0 flex-1"><div className="text-xl font-semibold text-white truncate">{title}</div><div className="text-xs text-slate-500">{sorted.length} фото</div></div>
+          <div className="min-w-0 flex-1"><div className="text-xl font-semibold text-white truncate">{title}</div><div className="text-xs text-slate-500">{sorted.length} фото · {fmtSize(sumBytes(sorted))}</div></div>
           {token && cur && <><button disabled={busyOp} onClick={rename} className={iconBtn} aria-label="Переименовать"><Pencil size={16} /></button>
             <button disabled={busyOp} onClick={removeAlbum} className={`${iconBtn} hover:text-rose-300`} aria-label="Удалить альбом"><Trash2 size={16} /></button></>}
           {token && sorted.length > 0 && <button onClick={() => setSel(sel ? null : new Set())} className="px-3 py-1.5 rounded-xl text-sm text-sky-300 hover:bg-white/[.06]">{sel ? 'Готово' : 'Выбрать'}</button>}
