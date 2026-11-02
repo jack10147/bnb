@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, Target, ListChecks, Flame, Dumbbell, Apple, Snowflake, Wallet } from 'lucide-react';
+import { LayoutDashboard, Target, ListChecks, Flame, Dumbbell, Apple, Snowflake, Wallet, Images } from 'lucide-react';
 import { buildModel, fmtLong, readHabitTaps, applyHabitTaps, nextHabitValue, writeHabitTap, isFinanceHidden } from './lib.js';
 import Overview from './tabs/Overview.jsx';
 import Goals from './tabs/Goals.jsx';
@@ -8,6 +8,7 @@ import Habits from './tabs/Habits.jsx';
 import Sport from './tabs/Sport.jsx';
 import Nutrition from './tabs/Nutrition.jsx';
 import Finance from './tabs/Finance.jsx';
+import Photos from './tabs/Photos.jsx';
 import Intro from './components/Intro.jsx';
 
 const TABS = [
@@ -18,6 +19,7 @@ const TABS = [
   { id: 'tasks', label: 'Задачи', icon: ListChecks, C: Tasks },
   { id: 'sport', label: 'Спорт', icon: Dumbbell, C: Sport },
   { id: 'goals', label: 'Цели', icon: Target, C: Goals },
+  { id: 'photos', label: 'Фотки', icon: Images, C: Photos },
 ];
 
 const tabFromHash = () => {
