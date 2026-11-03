@@ -209,11 +209,11 @@
       },
       {
         "id": "m-earn",
-        "title": "Заработать 1,2 млн ₸ в ноябре",
+        "title": "Заработать 1,2 млн ₸ (~$2 650) в ноябре",
         "category": "Финансы",
         "start": 0,
         "current": 0,
-        "target": 1200000,
+        "target": 2650,
         "unit": "$",
         "auto": "financeUsd",
         "month": "2026-11",
@@ -620,7 +620,7 @@
   },
   "finance": {
     "displayCurrency": "USD",
-    "monthGoalUsd": 1200000,
+    "monthGoalUsd": 2650,
     "balanceUsd": 10110,
     "balanceAsOf": "2026-10-08",
     "stableUsd": 0,

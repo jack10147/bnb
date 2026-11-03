@@ -58,13 +58,16 @@ export default function Goals({ data, model }) {
   const mAvg = avg(goals.month), sAvg = avg(goals.sixMonth);
   const sixTotal = diffDays(meta.startDate, meta.longTermEndDate);
   const sixElapsed = pct(Math.max(0, model.dayNum), sixTotal);
-  const monthElapsed = pct(Math.min(model.dayNum, 30), 30);
+  const ym = goals.month.find((g) => g.month)?.month || model.today.slice(0, 7);
+  const mStart = `${ym}-01`;
+  const mDays = new Date(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)), 0).getDate();
+  const monthElapsed = pct(Math.max(0, Math.min(mDays, diffDays(mStart, model.today) + 1)), mDays);
   return (
     <div>
       <SectionHeader title="Цели" subtitle="Прогресс по целям месяца и полугодия" />
       <div className="grid sm:grid-cols-2 gap-3 md:gap-4 mb-4">
         {[
-          { label: 'Цели месяца', v: mAvg, n: goals.month.length, time: monthElapsed, color: '#38bdf8', sub: `${fmtShort(meta.startDate)} — 30 дней` },
+          { label: 'Цели месяца', v: mAvg, n: goals.month.length, time: monthElapsed, color: '#38bdf8', sub: `${fmtShort(mStart)} — ${mDays} дней` },
           { label: 'Цели на 6 месяцев', v: sAvg, n: goals.sixMonth.length, time: sixElapsed, color: '#a78bfa', sub: `до ${fmtShort(meta.longTermEndDate)}` },
         ].map((x) => (
           <Card key={x.label} className="flex items-center gap-5">
