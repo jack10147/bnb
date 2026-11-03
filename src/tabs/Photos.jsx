@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Images, Upload, KeyRound, X, ChevronLeft, ChevronRight, Download, ExternalLink, Trash2, RefreshCw, FolderPlus, Folder, Pencil, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Card, SectionHeader } from '../components/ui.jsx';
-import { getToken, setToken, checkToken, loadManifest, deletePhotos, movePhotos, createAlbum, renameAlbum, deleteAlbum, rawUrl, repoSizeKB, OWNER, REPO } from '../photos/api.js';
+import { getToken, setToken, checkToken, loadManifest, deletePhotos, movePhotos, createAlbum, renameAlbum, deleteAlbum, rawUrl, repoSizeKB, isGif, extOf, OWNER, REPO } from '../photos/api.js';
 import { uploadFiles } from '../photos/image.js';
 
 const dateOf = (p) => p.takenAt || p.uploadedAt || '';
@@ -76,7 +76,7 @@ function Viewer({ photos, index, setIndex, onClose, onDelete, canDelete }) {
   const download = async () => {
     try {
       const b = await (await fetch(rawUrl(p.path))).blob();
-      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (p.name?.replace(/\.\w+$/, '') || p.id) + '.jpg'; a.click();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (p.name?.replace(/\.\w+$/, '') || p.id) + '.' + extOf(p.path); a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     } catch { window.open(rawUrl(p.path), '_blank'); }
   };
@@ -190,7 +190,7 @@ export default function Photos() {
   };
 
   const upload = async (list) => {
-    const files = [...list].filter((f) => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp)$/i.test(f.name));
+    const files = [...list].filter((f) => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|gif)$/i.test(f.name));
     if (!files.length || (progress && !progress.finished)) return;
     setProgress({ done: 0, total: files.length, errors: [], staged: 0 });
     try { await uploadFiles(token, files, (s) => setProgress((o) => ({ ...o, ...s })), cur ? cur.id : null); }
@@ -228,7 +228,7 @@ export default function Photos() {
   const uploadCard = (
     <Card className={`mb-4 space-y-3 ${dragOver ? 'ring-2 ring-sky-400' : ''}`}>
       {token && album && <>
-        <input ref={input} type="file" multiple accept="image/*" className="hidden" onChange={(e) => { upload(e.target.files); e.target.value = ''; }} />
+        <input ref={input} type="file" multiple accept="image/*,image/gif,.gif" className="hidden" onChange={(e) => { upload(e.target.files); e.target.value = ''; }} />
         <button disabled={busy} onClick={() => input.current?.click()}
           className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sky-500/90 hover:bg-sky-500 text-white font-medium disabled:opacity-60">
           <Upload size={18} /> {busy ? 'Загрузка…' : `Загрузить фото${cur ? ` в «${cur.name}»` : ''}`}
@@ -277,6 +277,7 @@ export default function Photos() {
           {sorted.map((p, i) => (
             <button key={p.id} onClick={() => (sel ? toggle(p.id) : setView(i))} className="relative aspect-square bg-white/[.04] overflow-hidden">
               <img src={rawUrl(p.thumb)} loading="lazy" decoding="async" alt="" className={`w-full h-full object-cover ${sel?.has(p.id) ? 'opacity-60 scale-95' : ''} transition`} />
+              {isGif(p) && <span className="absolute top-1 left-1 px-1 rounded bg-black/60 text-[10px] font-bold leading-4 text-white">GIF</span>}
               {sel && <CheckCircle2 size={22} className={`absolute bottom-1 right-1 ${sel.has(p.id) ? 'text-sky-400 fill-white' : 'text-white/70'}`} />}
             </button>
           ))}

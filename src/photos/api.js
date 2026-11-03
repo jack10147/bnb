@@ -98,6 +98,11 @@ export async function commitChange(token, { build, message }) {
 const filesOf = (p) => [p.path, p.thumb].filter(Boolean).map((path) => ({ path, sha: null }));
 export const newId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 const dir = (album) => album || 'unsorted';
+// Расширение файла по пути (старые записи — .jpg). GIF хранится как .gif, превью — .jpg.
+export const extOf = (path, def = 'jpg') => (path && /\.([a-z0-9]+)$/i.exec(path)?.[1].toLowerCase()) || def;
+export const isGif = (p) => p?.type === 'gif' || extOf(p?.path) === 'gif';
+export const relocate = (p, album) => ({ ...p, album: album || null,
+  path: `photos/${dir(album)}/${p.id}.${extOf(p.path)}`, thumb: `thumbs/${dir(album)}/${p.id}.${extOf(p.thumb)}` });
 
 export function deletePhotos(token, ids) {
   const set = new Set(ids);
@@ -115,7 +120,7 @@ export function movePhotos(token, ids, album) {
     const photos = m.photos.map((p) => {
       if (!set.has(p.id) || (p.album || null) === (album || null)) return p;
       if (!p.sha || !p.tsha) return { ...p, album: album || null };
-      const np = { ...p, album: album || null, path: `photos/${dir(album)}/${p.id}.jpg`, thumb: `thumbs/${dir(album)}/${p.id}.jpg` };
+      const np = relocate(p, album);
       files.push({ path: p.path, sha: null }, { path: p.thumb, sha: null }, { path: np.path, sha: p.sha }, { path: np.thumb, sha: p.tsha });
       return np;
     });
@@ -139,7 +144,7 @@ export function deleteAlbum(token, id, withPhotos) {
     if (withPhotos) files = inA.flatMap(filesOf);
     else inA.forEach((p) => {
       if (!p.sha || !p.tsha) { photos.push({ ...p, album: null }); return; }
-      const np = { ...p, album: null, path: `photos/unsorted/${p.id}.jpg`, thumb: `thumbs/unsorted/${p.id}.jpg` };
+      const np = relocate(p, null);
       files.push({ path: p.path, sha: null }, { path: p.thumb, sha: null }, { path: np.path, sha: p.sha }, { path: np.thumb, sha: p.tsha });
       photos.push(np);
     });

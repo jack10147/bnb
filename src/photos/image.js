@@ -1,5 +1,7 @@
 import { uploadBlob, commitChange, newId } from './api.js';
 
+export const MAX_GIF = 25 * 1024 * 1024;
+export const isGifFile = (f) => f.type === 'image/gif' || /\.gif$/i.test(f.name || '');
 export const MAX_SIDE = 2560, THUMB_SIDE = 400, QUALITY = 0.85, THUMB_QUALITY = 0.75, CHUNK = 20;
 
 // Дата съёмки из EXIF (DateTimeOriginal) — только JPEG, без зависимостей.
@@ -57,7 +59,19 @@ function render(src, w, h, maxSide, q) {
   return new Promise((res, rej) => c.toBlob((b) => { c.width = c.height = 0; b ? res({ blob: b, w: cw, h: ch }) : rej(new Error('Не удалось сжать')); }, 'image/jpeg', q));
 }
 
+// GIF: оригинальные байты без перекодирования + статичное JPEG-превью из первого кадра.
+export async function processGif(file) {
+  if (file.size > MAX_GIF) throw new Error('Гифка слишком большая (макс 25 МБ)');
+  const src = await decode(file);
+  const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
+  if (!w || !h) throw new Error('Пустое изображение');
+  const thumb = await render(src, w, h, THUMB_SIDE, THUMB_QUALITY);
+  src.close?.();
+  return { full: { blob: file, w, h }, thumb, takenAt: null, gif: true };
+}
+
 export async function processImage(file) {
+  if (isGifFile(file)) return processGif(file);
   const src = await decode(file);
   const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
   if (!w || !h) throw new Error('Пустое изображение');
@@ -86,13 +100,13 @@ export async function uploadFiles(token, files, onProgress = () => {}, album = n
   };
   for (const file of files) {
     try {
-      const { full, thumb, takenAt } = await processImage(file);
+      const { full, thumb, takenAt, gif } = await processImage(file);
       const id = newId(), ym = album || 'unsorted';
-      const path = `photos/${ym}/${id}.jpg`, tpath = `thumbs/${ym}/${id}.jpg`;
+      const path = `photos/${ym}/${id}.${gif ? 'gif' : 'jpg'}`, tpath = `thumbs/${ym}/${id}.jpg`;
       const [s1, s2] = await Promise.all([uploadBlob(token, full.blob), uploadBlob(token, thumb.blob)]);
       pending.push({
         files: [{ path, sha: s1 }, { path: tpath, sha: s2 }],
-        entry: { id, path, thumb: tpath, sha: s1, tsha: s2, w: full.w, h: full.h, size: full.blob.size, tsize: thumb.blob.size, name: file.name || '', takenAt, uploadedAt: new Date().toISOString() },
+        entry: { id, path, thumb: tpath, sha: s1, tsha: s2, w: full.w, h: full.h, size: full.blob.size, tsize: thumb.blob.size, name: file.name || '', ...(gif ? { type: 'gif', mime: 'image/gif' } : {}), takenAt, uploadedAt: new Date().toISOString() },
       });
     } catch (e) {
       errors.push({ name: file.name || 'файл', error: e.message });
