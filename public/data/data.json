@@ -198,29 +198,56 @@
     "month": [
       {
         "id": "m-weight",
-        "title": "Сбросить 6–7 кг к 28 октября (до ~98,5 кг)",
+        "title": "Сбросить 6–7 кг к 30 ноября (до ~98,5 кг)",
         "category": "Спорт",
         "start": 105,
         "current": 105,
         "target": 98.5,
         "unit": "кг",
         "auto": "weight",
-        "deadline": "2026-10-28"
+        "deadline": "2026-11-30"
       },
       {
         "id": "m-earn",
-        "title": "Заработать $1,2 млн в октябре",
+        "title": "Заработать 1,2 млн ₸ в ноябре",
         "category": "Финансы",
         "start": 0,
         "current": 0,
         "target": 1200000,
         "unit": "$",
         "auto": "financeUsd",
-        "month": "2026-10",
-        "deadline": "2026-10-31"
+        "month": "2026-11",
+        "deadline": "2026-11-30"
       }
     ],
-    "sixMonth": []
+    "sixMonth": [],
+    "history": {
+      "2026-10": [
+        {
+          "id": "m-weight",
+          "title": "Сбросить 6–7 кг к 28 октября (до ~98,5 кг)",
+          "category": "Спорт",
+          "start": 105,
+          "current": 105,
+          "target": 98.5,
+          "unit": "кг",
+          "auto": "weight",
+          "deadline": "2026-10-28"
+        },
+        {
+          "id": "m-earn",
+          "title": "Заработать $1,2 млн в октябре",
+          "category": "Финансы",
+          "start": 0,
+          "current": 0,
+          "target": 1200000,
+          "unit": "$",
+          "auto": "financeUsd",
+          "month": "2026-10",
+          "deadline": "2026-10-31"
+        }
+      ]
+    }
   },
   "days": {
     "2026-09-01": {
