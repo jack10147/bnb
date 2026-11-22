@@ -94,10 +94,9 @@
     }
     .coin-icon.alt { background: linear-gradient(180deg, #5b8def, #2f5fd0); font-size: 13px; }
     .pair-name { display: flex; align-items: center; gap: 6px; min-width: 0; }
-    .pair-name input {
+    .coin-name {
       font-weight: 700;
       font-size: 18px;
-      width: 7.5ch;
       letter-spacing: -0.02em;
     }
     .badge {
@@ -108,10 +107,52 @@
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 2px 6px;
+      white-space: nowrap;
     }
     .head-price { margin-left: auto; text-align: right; }
     .head-price .lbl { display: block; font-size: 11px; color: var(--muted); }
+    .head-price-row { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
     .head-price .val { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
+    .head-price .note { display: block; font-size: 10px; color: var(--muted-2); margin-top: 1px; }
+    .refresh {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #1c1c1c;
+      border: 1px solid var(--line);
+      color: #ddd;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .refresh:hover { background: #262626; color: #fff; }
+    .refresh svg { width: 15px; height: 15px; display: block; }
+    .refresh.spin svg { animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .coin-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: -2px 0 14px;
+    }
+    .coin-bar button {
+      height: 32px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: #cfcfcf;
+      font-size: 12px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .coin-bar button .mx { font-size: 10px; font-weight: 650; color: var(--muted); }
+    .coin-bar button.on { background: #fff; color: #111; border-color: #fff; }
+    .coin-bar button.on .mx { color: #555; }
 
     .sides {
       display: grid;
@@ -475,15 +516,25 @@
       <div class="coin-icon" id="coinIcon">₿</div>
       <div>
         <div class="pair-name">
-          <input id="coin" type="text" maxlength="12" spellcheck="false" aria-label="Монета" />
-          <span class="badge">300x</span>
+          <span class="coin-name" id="coinName">BTC</span>
+          <span class="badge" id="maxLevBadge">40x</span>
         </div>
       </div>
       <div class="head-price">
-        <span class="lbl">Цена</span>
-        <span class="val" id="headPrice">—</span>
+        <span class="lbl" id="headPriceLbl">Цена</span>
+        <div class="head-price-row">
+          <span class="val" id="headPrice">—</span>
+          <button type="button" class="refresh" id="refreshPrice" title="Обновить цену" aria-label="Обновить цену">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12a9 9 0 1 1-2.3-6"/>
+              <path d="M21 3v6h-6"/>
+            </svg>
+          </button>
+        </div>
+        <span class="note" id="priceNote"></span>
       </div>
     </div>
+    <div class="coin-bar" id="coinBar"></div>
 
     <div class="sides">
       <button type="button" id="btnLong">Лонг</button>
@@ -617,15 +668,33 @@
   <script>
   (function () {
     const KEY = 'bnb-calc';
-    const LEV_MAX = 300;
     const MM = 0.005;
     const TP_CHIPS = [10, 25, 50, 100];
     const SL_CHIPS = [-10, -25, -50, -75];
     const LEV_CHIPS = [10, 20, 50, 100];
+    const API = 'https://fapi.asterdex.com/fapi/v1';
+    const COINS = [
+      { id: 'BTC', symbol: 'BTCUSDT', name: 'BTC', max: 40, fallback: 60881, color: '#f5a623' },
+      { id: 'HYPE', symbol: 'HYPEUSDT', name: 'HYPE', max: 300, fallback: 62.511, color: '#00c2a8' },
+      { id: 'MRNA', symbol: 'MRNAUSDT', name: 'MRNA', max: 20, fallback: 203.277, color: '#7c5cff' },
+      { id: 'ANT', symbol: 'ANTUSDT', name: 'ANT', max: 20, fallback: 90.09, color: '#4c8dff' },
+      { id: 'VVV', symbol: 'VVVUSDT', name: 'VVV', max: 10, fallback: 25.893, color: '#e0b84a' },
+      { id: 'SOXL', symbol: 'SOXLUSDT', name: 'SOXL', max: 50, fallback: 33.90, color: '#ff6b4a' },
+      { id: 'MU', symbol: 'MUUSD1', name: 'MU', max: 20, fallback: 619.72, color: '#3db8ff', quote: 'USD1' },
+      { id: 'AMD', symbol: 'AMDUSDT', name: 'AMD', max: 50, fallback: 446.62, color: '#ed1c24' },
+      { id: 'AVGO', symbol: 'AVGOUSDT', name: 'AVGO', max: 20, fallback: 319.71, color: '#cc092f' },
+      { id: 'TSM', symbol: 'TSMUSDT', name: 'TSM', max: 20, fallback: 330.31, color: '#5b8def' },
+      { id: 'SKHYNIX', symbol: 'SKHYNIXUSD1', name: 'SKHYNIX', max: 20, fallback: 789.5, color: '#ff7a18', quote: 'USD1' },
+      { id: 'SOL', symbol: 'SOLUSDT', name: 'SOL', max: 100, fallback: 70.28, color: '#9945ff' },
+      { id: 'NVDA', symbol: 'NVDAUSDT', name: 'NVDA', max: 20, fallback: 132.89, color: '#76b900' },
+    ];
+    const COIN_BY_ID = Object.fromEntries(COINS.map((c) => [c.id, c]));
 
     const $ = (id) => document.getElementById(id);
     const els = {
-      coin: $('coin'), coinIcon: $('coinIcon'), headPrice: $('headPrice'),
+      coinName: $('coinName'), coinIcon: $('coinIcon'), maxLevBadge: $('maxLevBadge'),
+      headPrice: $('headPrice'), headPriceLbl: $('headPriceLbl'), priceNote: $('priceNote'),
+      refreshPrice: $('refreshPrice'), coinBar: $('coinBar'),
       btnLong: $('btnLong'), btnShort: $('btnShort'),
       margin: $('margin'), position: $('position'), entry: $('entry'),
       levNum: $('levNum'), levRange: $('levRange'), levBubble: $('levBubble'), levFill: $('levFill'),
@@ -651,10 +720,35 @@
       feePct: 0.05,
       tp: 10,   // ROI % on margin; null if cleared
       sl: -10,
+      livePrice: null,
+      priceStatus: '', // loading | live | fallback
     };
 
     const focused = new Set();
     let toastTimer = 0;
+    let fetchGen = 0;
+
+    function currentCoin() {
+      return COIN_BY_ID[state.coin] || COINS[0];
+    }
+
+    function findCoin(raw) {
+      const s = String(raw || '').trim().toUpperCase();
+      if (!s) return null;
+      return COINS.find((c) => c.id === s || c.name === s || c.symbol === s) ||
+        COINS.find((c) => c.symbol.startsWith(s)) ||
+        null;
+    }
+
+    function levMax() {
+      return currentCoin().max;
+    }
+
+    function clampLev(v) {
+      const n = Math.round(Number(v));
+      if (!isFinite(n)) return 1;
+      return Math.min(levMax(), Math.max(1, n));
+    }
 
     function parseNum(v) {
       if (typeof v === 'number') return v;
@@ -773,14 +867,18 @@
         if (!raw) return;
         const o = JSON.parse(raw);
         if (o.side === 'long' || o.side === 'short') state.side = o.side;
-        if (typeof o.coin === 'string' && o.coin.trim()) state.coin = o.coin.trim().slice(0, 12);
+        if (typeof o.coin === 'string' && o.coin.trim()) {
+          const found = findCoin(o.coin);
+          if (found) state.coin = found.id;
+        }
         if (isFinite(o.margin) && o.margin > 0) state.margin = o.margin;
         if (isFinite(o.entry) && o.entry > 0) state.entry = o.entry;
-        if (isFinite(o.lev)) state.lev = Math.min(LEV_MAX, Math.max(1, Math.round(o.lev)));
+        if (isFinite(o.lev)) state.lev = Math.round(o.lev);
         if (isFinite(o.feePct) && o.feePct >= 0) state.feePct = o.feePct;
         state.tp = (o.tp == null || o.tp === '') ? null : (isFinite(o.tp) ? o.tp : state.tp);
         state.sl = (o.sl == null || o.sl === '') ? null : (isFinite(o.sl) ? o.sl : state.sl);
       } catch (e) { /* ignore */ }
+      state.lev = clampLev(state.lev);
     }
 
     function save() {
@@ -822,7 +920,7 @@
     }
 
     function positionBubble() {
-      const min = 1, max = LEV_MAX;
+      const min = 1, max = levMax();
       const pct = (state.lev - min) / (max - min);
       const range = els.levRange;
       const thumb = 46;
@@ -832,21 +930,42 @@
       els.levFill.style.width = (x) + 'px';
     }
 
-    function coinGlyph(name) {
-      const n = (name || '').trim().toUpperCase();
-      if (n === 'BTC' || n === 'XBT') return { text: '₿', alt: false };
-      const letters = n.replace(/[^A-Z0-9]/g, '').slice(0, 3) || '?';
-      return { text: letters, alt: true };
+    function coinGlyph(coin) {
+      if (coin.id === 'BTC') return { text: '₿', color: coin.color };
+      const letters = coin.name.replace(/[^A-Z0-9]/g, '').slice(0, coin.name.length > 4 ? 3 : 4) || '?';
+      return { text: letters, color: coin.color || '#5b8def' };
+    }
+
+    function buildCoinBar() {
+      els.coinBar.innerHTML = '';
+      COINS.forEach((c) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.id = c.id;
+        b.innerHTML = '<span>' + c.name + '</span><span class="mx">' + c.max + 'x</span>';
+        b.addEventListener('click', () => selectCoin(c.id));
+        els.coinBar.appendChild(b);
+      });
+    }
+
+    function updateCoinBar() {
+      const id = currentCoin().id;
+      els.coinBar.querySelectorAll('button').forEach((b) => {
+        b.classList.toggle('on', b.dataset.id === id);
+      });
     }
 
     function renderChips() {
       els.levChips.innerHTML = '';
-      LEV_CHIPS.forEach((v) => {
+      const max = levMax();
+      const chips = LEV_CHIPS.filter((v) => v < max);
+      if (!chips.includes(max)) chips.push(max);
+      chips.forEach((v) => {
         const b = document.createElement('button');
         b.type = 'button';
         b.textContent = v + 'x';
         if (state.lev === v) b.classList.add('on');
-        b.addEventListener('click', () => { state.lev = v; save(); render(); });
+        b.addEventListener('click', () => { state.lev = clampLev(v); save(); render(); });
         els.levChips.appendChild(b);
       });
       els.tpChips.innerHTML = '';
@@ -878,25 +997,44 @@
     }
 
     function render() {
-      const coin = state.coin || 'BTC';
+      const coin = currentCoin();
       const g = coinGlyph(coin);
       els.coinIcon.textContent = g.text;
-      els.coinIcon.classList.toggle('alt', g.alt);
-      setIfUnfocused(els.coin, coin);
+      els.coinIcon.classList.toggle('alt', coin.id !== 'BTC');
+      els.coinIcon.style.background = 'linear-gradient(180deg, ' + g.color + ', ' + g.color + 'cc)';
+      els.coinName.textContent = coin.name;
+      els.maxLevBadge.textContent = coin.max + 'x';
+      updateCoinBar();
 
       const long = state.side === 'long';
       els.btnLong.className = long ? 'on-long' : '';
       els.btnShort.className = long ? '' : 'on-short';
       els.cta.className = 'cta ' + (long ? 'long' : 'short');
-      els.cta.textContent = (long ? 'Лонг ' : 'Шорт ') + coin;
+      els.cta.textContent = (long ? 'Лонг ' : 'Шорт ') + coin.name;
 
+      state.lev = clampLev(state.lev);
       setIfUnfocused(els.margin, focused.has(els.margin) ? els.margin.value : trimFixed(state.margin, 2));
       setIfUnfocused(els.entry, focused.has(els.entry) ? els.entry.value : trimFixed(state.entry, priceDecimals(state.entry)));
       setIfUnfocused(els.levNum, String(state.lev));
+      els.levRange.max = String(levMax());
       els.levRange.value = String(state.lev);
       setIfUnfocused(els.feePct, trimFixed(state.feePct, 4));
 
-      els.headPrice.textContent = validBase() ? fmtPrice(state.entry, true) : '—';
+      const shown = (state.livePrice > 0) ? state.livePrice : state.entry;
+      els.headPrice.textContent = isFinite(shown) && shown > 0 ? fmtPrice(shown, true) : '—';
+      if (state.priceStatus === 'loading') {
+        els.priceNote.textContent = 'загрузка…';
+        els.refreshPrice.classList.add('spin');
+      } else if (state.priceStatus === 'live') {
+        els.priceNote.textContent = 'Mark с Aster';
+        els.refreshPrice.classList.remove('spin');
+      } else if (state.priceStatus === 'fallback') {
+        els.priceNote.textContent = 'офлайн, последняя известная';
+        els.refreshPrice.classList.remove('spin');
+      } else {
+        els.priceNote.textContent = '';
+        els.refreshPrice.classList.remove('spin');
+      }
       els.position.textContent = validBase()
         ? (Number.isInteger(position()) ? '$' + position().toLocaleString('en-US') : fmtUsd(position()))
         : '—';
@@ -1044,12 +1182,6 @@
       toast('Скопировано: ' + text);
     }
 
-    bindInput(els.coin, (v) => {
-      const t = String(v || '').trim().slice(0, 12);
-      state.coin = t || 'BTC';
-      save();
-    }, { live: true });
-
     bindInput(els.margin, (v) => {
       const n = parseNum(v);
       if (n > 0) state.margin = n;
@@ -1071,8 +1203,59 @@
     function setLev(v) {
       const n = Math.round(parseNum(v));
       if (!isFinite(n)) return;
-      state.lev = Math.min(LEV_MAX, Math.max(1, n));
+      state.lev = clampLev(n);
       save();
+    }
+
+    async function fetchLive(symbol) {
+      try {
+        const r = await fetch(API + '/premiumIndex?symbol=' + encodeURIComponent(symbol), { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          const p = parseFloat(j.markPrice);
+          if (p > 0) return p;
+        }
+      } catch (e) { /* try last price */ }
+      try {
+        const r = await fetch(API + '/ticker/price?symbol=' + encodeURIComponent(symbol), { cache: 'no-store' });
+        if (r.ok) {
+          const j = await r.json();
+          const p = parseFloat(j.price);
+          if (p > 0) return p;
+        }
+      } catch (e) { /* fallback */ }
+      return null;
+    }
+
+    async function refreshPrice({ fillEntry, quiet } = {}) {
+      const coin = currentCoin();
+      const gen = ++fetchGen;
+      state.priceStatus = 'loading';
+      render();
+      const live = await fetchLive(coin.symbol);
+      if (gen !== fetchGen) return;
+      if (live > 0) {
+        state.livePrice = live;
+        state.priceStatus = 'live';
+        if (fillEntry && !focused.has(els.entry)) state.entry = live;
+      } else {
+        state.livePrice = coin.fallback;
+        state.priceStatus = 'fallback';
+        if (fillEntry && !focused.has(els.entry) && coin.fallback > 0) state.entry = coin.fallback;
+        if (!quiet) toast('Нет цены с Aster, поставил последнюю известную');
+      }
+      save();
+      render();
+    }
+
+    function selectCoin(id) {
+      const coin = COIN_BY_ID[id];
+      if (!coin) return;
+      state.coin = coin.id;
+      state.lev = clampLev(state.lev);
+      save();
+      render();
+      refreshPrice({ fillEntry: true });
     }
     bindInput(els.levNum, (v) => { setLev(v); }, { live: true });
     els.levRange.addEventListener('input', () => { setLev(els.levRange.value); render(); });
@@ -1134,10 +1317,13 @@
     els.clearSl.addEventListener('click', () => { state.sl = null; save(); render(); });
     els.copyTp.addEventListener('click', () => copy('tp'));
     els.copySl.addEventListener('click', () => copy('sl'));
+    els.refreshPrice.addEventListener('click', () => refreshPrice({ fillEntry: true }));
     window.addEventListener('resize', positionBubble);
 
     load();
+    buildCoinBar();
     render();
+    refreshPrice({ fillEntry: false, quiet: true });
   })();
   </script>
 </body>
