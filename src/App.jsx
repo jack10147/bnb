@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, Target, ListChecks, Flame, Dumbbell, Apple, Snowflake, Wallet, Images } from 'lucide-react';
+import { LayoutDashboard, Target, ListChecks, Flame, Dumbbell, Apple, Snowflake, Wallet, Images, Calculator } from 'lucide-react';
 import { buildModel, fmtLong, readHabitTaps, applyHabitTaps, nextHabitValue, writeHabitTap, isFinanceHidden } from './lib.js';
 import Overview from './tabs/Overview.jsx';
 import Goals from './tabs/Goals.jsx';
@@ -102,7 +102,15 @@ export default function App() {
               </a>
             ))}
           </nav>
-          <div className="ml-auto text-right text-xs text-slate-400 hidden lg:block">
+          <a
+            href={`${import.meta.env.BASE_URL}calc/`}
+            className="ml-auto flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-white/[.06]"
+            title="Калькулятор TP/SL"
+          >
+            <Calculator size={16} />
+            <span>Калькулятор</span>
+          </a>
+          <div className="text-right text-xs text-slate-400 hidden lg:block">
             <div className="text-slate-300">{fmtLong(model.today)}</div>
             <div>Алматы</div>
           </div>

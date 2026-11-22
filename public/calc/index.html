@@ -1,0 +1,1144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Калькулятор TP/SL</title>
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --card: #161616;
+      --card-2: #1c1c1c;
+      --line: #2a2a2a;
+      --text: #f5f5f5;
+      --muted: #8a8a8a;
+      --muted-2: #6b6b6b;
+      --green: #86e8a8;
+      --green-text: #86e8a8;
+      --green-dim: rgba(134, 232, 168, .12);
+      --red: #f6465d;
+      --red-text: #ff6b7d;
+      --red-dim: rgba(246, 70, 93, .12);
+      --btn-text: #0c1a12;
+      --r: 16px;
+      --safe-t: env(safe-area-inset-top);
+      --safe-b: env(safe-area-inset-bottom);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100dvh;
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; border: 0; background: none; }
+    input {
+      background: transparent;
+      border: 0;
+      outline: none;
+      width: 100%;
+      min-width: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    /* iOS zoom guard */
+    input[type="text"], input[type="number"], input[type="search"] { font-size: 16px; }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+    .page {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: calc(10px + var(--safe-t)) 14px calc(28px + var(--safe-b));
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 2px;
+    }
+    .back:hover { color: var(--text); }
+    .top-title { font-size: 13px; color: var(--muted); }
+
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .coin-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #f5a623, #c47a00);
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .coin-icon.alt { background: linear-gradient(180deg, #5b8def, #2f5fd0); font-size: 13px; }
+    .pair-name { display: flex; align-items: center; gap: 6px; min-width: 0; }
+    .pair-name input {
+      font-weight: 700;
+      font-size: 18px;
+      width: 7.5ch;
+      letter-spacing: -0.02em;
+    }
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #cfcfcf;
+      background: #242424;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+    .head-price { margin-left: auto; text-align: right; }
+    .head-price .lbl { display: block; font-size: 11px; color: var(--muted); }
+    .head-price .val { font-size: 16px; font-weight: 700; letter-spacing: -0.02em; }
+
+    .sides {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .sides button {
+      height: 42px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .sides button.on-long { background: var(--green); color: var(--btn-text); border-color: transparent; }
+    .sides button.on-short { background: var(--red); color: #fff; border-color: transparent; }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 14px 14px 12px;
+      margin-bottom: 10px;
+    }
+    .lbl {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .split {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .money {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+    .money .cur { font-size: 22px; color: var(--text); }
+    .money input { font-size: 28px; font-weight: 800; line-height: 1.1; }
+    .pos { text-align: right; }
+    .pos .val { font-size: 18px; font-weight: 800; margin-top: 2px; letter-spacing: -0.02em; }
+
+    .entry .money input { font-size: 28px; }
+
+    .lev-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .lev-edit {
+      display: flex;
+      align-items: center;
+      background: var(--card-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-weight: 800;
+      min-width: 72px;
+    }
+    .lev-edit input {
+      width: 4.2ch;
+      text-align: right;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .slider-wrap {
+      position: relative;
+      height: 44px;
+      margin: 4px 0 2px;
+    }
+    .slider-wrap input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 44px;
+      background: transparent;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .slider-track {
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      height: 4px;
+      border-radius: 99px;
+      background: #2c2c2c;
+      transform: translateY(-50%);
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slider-fill {
+      height: 100%;
+      width: 0;
+      background: #5a5a5a;
+      border-radius: 99px;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.4);
+      cursor: pointer;
+      border: 0;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+      background: #fff;
+      border: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,.4);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-track { background: transparent; height: 4px; border: 0; }
+    .lev-bubble {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      height: 26px;
+      min-width: 46px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      font-weight: 800;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 3;
+      box-shadow: 0 1px 4px rgba(0,0,0,.4);
+    }
+
+    .chips { display: flex; gap: 8px; margin-top: 10px; }
+    .chips button {
+      flex: 1;
+      height: 34px;
+      border-radius: 10px;
+      background: #202020;
+      border: 1px solid #2e2e2e;
+      color: #d2d2d2;
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .chips button.on { background: #2a2a2a; color: #fff; border-color: #3a3a3a; }
+    .chips.green button.on { background: var(--green-dim); color: var(--green-text); border-color: transparent; }
+    .chips.red button.on { background: var(--red-dim); color: var(--red-text); border-color: transparent; }
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 2px 2px 12px;
+      line-height: 1.4;
+    }
+    .meta b { color: #d8d8d8; font-weight: 650; }
+    .fee-edit {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted-2);
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+    .fee-edit input {
+      width: 4.6ch;
+      text-align: right;
+      border-bottom: 1px dashed #3a3a3a;
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .cta {
+      width: 100%;
+      height: 52px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cta.long { background: var(--green); color: var(--btn-text); }
+    .cta.short { background: var(--red); color: #fff; }
+
+    .sheet h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .block { margin-bottom: 18px; }
+    .block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .block-head .ttl { font-weight: 700; font-size: 15px; }
+    .block.tp .ttl { color: var(--green-text); }
+    .block.sl .ttl { color: var(--red-text); }
+    .clear {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      padding: 6px 2px;
+    }
+    .clear:hover { color: var(--text); }
+
+    .fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .field {
+      background: var(--card-2);
+      border: 1px solid #262626;
+      border-radius: 12px;
+      padding: 8px 10px 8px;
+    }
+    .field.full { grid-column: 1 / -1; }
+    .field .lbl { font-size: 11px; margin-bottom: 2px; }
+    .field .row {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .field input { font-weight: 700; font-size: 18px; }
+    .field .pfx { color: #c8c8c8; }
+
+    .pnl-line {
+      margin-top: 10px;
+      text-align: right;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .pnl-line.tp { color: var(--green-text); }
+    .pnl-line.sl { color: var(--red-text); }
+    .pnl-line .net {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .move-line {
+      margin-top: 4px;
+      text-align: right;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .warn {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #ffb020;
+    }
+    .rr {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #e8e8e8;
+      padding: 6px 0 2px;
+    }
+    .rr span { color: var(--muted); font-weight: 500; }
+
+    .paste h2 { margin: 0 0 6px; font-size: 16px; }
+    .hint {
+      margin: 0 0 14px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .paste-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px solid #232323;
+    }
+    .paste-row:first-of-type { border-top: 0; padding-top: 0; }
+    .paste-row .k { font-size: 12px; color: var(--muted); }
+    .paste-row .v {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+    .paste-row .v.tp { color: var(--green-text); }
+    .paste-row .v.sl { color: var(--red-text); }
+    .copy-btn {
+      flex-shrink: 0;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background: #fff;
+      color: #111;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .copy-btn.done { background: var(--green); color: var(--btn-text); }
+    .alts {
+      margin-top: 4px;
+      padding-top: 12px;
+      border-top: 1px solid #232323;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .alts b { color: #ddd; font-weight: 650; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(18px + var(--safe-b));
+      transform: translateX(-50%) translateY(16px);
+      background: #fff;
+      color: #111;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+      z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a class="back" href="../">← Дашборд</a>
+      <div class="top-title">Калькулятор TP/SL</div>
+    </div>
+
+    <div class="head">
+      <div class="coin-icon" id="coinIcon">₿</div>
+      <div>
+        <div class="pair-name">
+          <input id="coin" type="text" maxlength="12" spellcheck="false" aria-label="Монета" />
+          <span class="badge">300x</span>
+        </div>
+      </div>
+      <div class="head-price">
+        <span class="lbl">Цена</span>
+        <span class="val" id="headPrice">—</span>
+      </div>
+    </div>
+
+    <div class="sides">
+      <button type="button" id="btnLong">Лонг</button>
+      <button type="button" id="btnShort">Шорт</button>
+    </div>
+
+    <section class="card">
+      <div class="split">
+        <div>
+          <div class="lbl">Маржа</div>
+          <div class="money"><span class="cur">$</span><input id="margin" inputmode="decimal" enterkeyhint="done" aria-label="Маржа" /></div>
+        </div>
+        <div class="pos">
+          <div class="lbl">Позиция</div>
+          <div class="val" id="position">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card entry">
+      <div class="lbl">Цена входа</div>
+      <div class="money"><span class="cur">$</span><input id="entry" inputmode="decimal" enterkeyhint="done" aria-label="Цена входа" /></div>
+    </section>
+
+    <section class="card">
+      <div class="lev-head">
+        <div class="lbl">Плечо</div>
+        <div class="lev-edit">
+          <input id="levNum" inputmode="numeric" enterkeyhint="done" aria-label="Плечо" />
+          <span>x</span>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track"><div class="slider-fill" id="levFill"></div></div>
+        <input type="range" id="levRange" min="1" max="300" step="1" aria-label="Плечо" />
+        <div class="lev-bubble" id="levBubble">19x</div>
+      </div>
+      <div class="chips" id="levChips"></div>
+    </section>
+
+    <div class="meta">
+      <div>Ликвидация ≈ <b id="liq">—</b> <span id="liqPct"></span></div>
+      <div class="fee-edit">
+        <span>~$<span id="feeEst">—</span> комиссия</span>
+        <span>· тейкер</span>
+        <input id="feePct" inputmode="decimal" aria-label="Комиссия тейкер, % за сторону" />
+        <span>% / сторона</span>
+      </div>
+    </div>
+
+    <div class="cta long" id="cta">Лонг BTC</div>
+
+    <section class="card sheet">
+      <h2>Take profit & Stop loss</h2>
+
+      <div class="block tp">
+        <div class="block-head">
+          <div class="ttl">↑ Take profit</div>
+          <button type="button" class="clear" id="clearTp">× Clear</button>
+        </div>
+        <div class="fields">
+          <label class="field">
+            <div class="lbl">Price</div>
+            <div class="row"><span class="pfx">$</span><input id="tpPrice" inputmode="decimal" aria-label="TP цена" /></div>
+          </label>
+          <label class="field">
+            <div class="lbl">Gain %</div>
+            <div class="row"><input id="tpPct" inputmode="decimal" aria-label="TP ROI %" /></div>
+          </label>
+          <label class="field full">
+            <div class="lbl">Прибыль $</div>
+            <div class="row"><span class="pfx">$</span><input id="tpUsd" inputmode="decimal" aria-label="TP прибыль $" /></div>
+          </label>
+        </div>
+        <div class="chips green" id="tpChips"></div>
+        <div class="pnl-line tp" id="tpLine"></div>
+        <div class="move-line" id="tpMove"></div>
+        <div class="warn" id="tpWarn" hidden></div>
+      </div>
+
+      <div class="block sl">
+        <div class="block-head">
+          <div class="ttl">↓ Stop loss</div>
+          <button type="button" class="clear" id="clearSl">× Clear</button>
+        </div>
+        <div class="fields">
+          <label class="field">
+            <div class="lbl">Price</div>
+            <div class="row"><span class="pfx">$</span><input id="slPrice" inputmode="decimal" aria-label="SL цена" /></div>
+          </label>
+          <label class="field">
+            <div class="lbl">Loss %</div>
+            <div class="row"><input id="slPct" inputmode="decimal" aria-label="SL ROI %" /></div>
+          </label>
+          <label class="field full">
+            <div class="lbl">Лосс $</div>
+            <div class="row"><span class="pfx">$</span><input id="slUsd" inputmode="decimal" aria-label="SL лосс $" /></div>
+          </label>
+        </div>
+        <div class="chips red" id="slChips"></div>
+        <div class="pnl-line sl" id="slLine"></div>
+        <div class="move-line" id="slMove"></div>
+        <div class="warn" id="slWarn" hidden></div>
+      </div>
+
+      <div class="rr" id="rr"></div>
+    </section>
+
+    <section class="card paste">
+      <h2>Вписать на Aster (режим Price)</h2>
+      <p class="hint">Вставь эти цены в TP и SL на Aster в режиме Price. Ордер сработает ровно по цене (Aster по умолчанию смотрит Mark price). Price надёжнее, чем PnL или ROI(%): не зависит от комиссий.</p>
+      <div class="paste-row">
+        <div>
+          <div class="k">TP цена</div>
+          <div class="v tp" id="outTp">—</div>
+        </div>
+        <button type="button" class="copy-btn" id="copyTp">Копировать</button>
+      </div>
+      <div class="paste-row">
+        <div>
+          <div class="k">SL цена</div>
+          <div class="v sl" id="outSl">—</div>
+        </div>
+        <button type="button" class="copy-btn" id="copySl">Копировать</button>
+      </div>
+      <div class="alts" id="alts"></div>
+    </section>
+  </div>
+  <div class="toast" id="toast">Скопировано</div>
+
+  <script>
+  (function () {
+    const KEY = 'bnb-calc';
+    const LEV_MAX = 300;
+    const MM = 0.005;
+    const TP_CHIPS = [10, 25, 50, 100];
+    const SL_CHIPS = [-10, -25, -50, -75];
+    const LEV_CHIPS = [10, 20, 50, 100];
+
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      coin: $('coin'), coinIcon: $('coinIcon'), headPrice: $('headPrice'),
+      btnLong: $('btnLong'), btnShort: $('btnShort'),
+      margin: $('margin'), position: $('position'), entry: $('entry'),
+      levNum: $('levNum'), levRange: $('levRange'), levBubble: $('levBubble'), levFill: $('levFill'),
+      levChips: $('levChips'), liq: $('liq'), liqPct: $('liqPct'),
+      feeEst: $('feeEst'), feePct: $('feePct'), cta: $('cta'),
+      tpPrice: $('tpPrice'), tpPct: $('tpPct'), tpUsd: $('tpUsd'),
+      slPrice: $('slPrice'), slPct: $('slPct'), slUsd: $('slUsd'),
+      tpChips: $('tpChips'), slChips: $('slChips'),
+      tpLine: $('tpLine'), slLine: $('slLine'),
+      tpMove: $('tpMove'), slMove: $('slMove'),
+      tpWarn: $('tpWarn'), slWarn: $('slWarn'),
+      rr: $('rr'), outTp: $('outTp'), outSl: $('outSl'), alts: $('alts'),
+      copyTp: $('copyTp'), copySl: $('copySl'),
+      clearTp: $('clearTp'), clearSl: $('clearSl'), toast: $('toast'),
+    };
+
+    const state = {
+      side: 'long',
+      coin: 'BTC',
+      margin: 1000,
+      entry: 60881,
+      lev: 19,
+      feePct: 0.05,
+      tp: 10,   // ROI % on margin; null if cleared
+      sl: -10,
+    };
+
+    const focused = new Set();
+    let toastTimer = 0;
+
+    function parseNum(v) {
+      if (typeof v === 'number') return v;
+      if (v == null) return NaN;
+      let s = String(v).trim();
+      if (!s) return NaN;
+      s = s.replace(/[\s$\u00a0]/g, '').replace(/[−–—]/g, '-');
+      const neg = s.startsWith('-') || s.startsWith('+') ? s[0] : '';
+      if (neg) s = s.slice(1);
+      if (s.includes(',') && s.includes('.')) {
+        // 60,881.43 or 60.881,43 — last separator is decimal
+        if (s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g, '').replace(',', '.');
+        else s = s.replace(/,/g, '');
+      } else if (s.includes(',')) {
+        const frac = s.split(',').pop();
+        // 1,000 / 60,881 — thousands; 60881,5 / 0,05 — decimal comma
+        s = (frac.length === 3 && s.split(',').every((p, i) => i === 0 ? /^\d{1,3}$/.test(p) : p.length === 3))
+          ? s.replace(/,/g, '')
+          : s.replace(',', '.');
+      }
+      const n = parseFloat(s);
+      return neg === '-' ? -n : n;
+    }
+
+    function priceDecimals(x) {
+      const a = Math.abs(x);
+      if (a >= 1000) return 2;
+      if (a >= 100) return 3;
+      if (a >= 1) return 4;
+      if (a >= 0.01) return 6;
+      if (a >= 0.0001) return 8;
+      return 10;
+    }
+
+    function trimFixed(x, d) {
+      if (!isFinite(x)) return '';
+      let s = Math.abs(x).toFixed(d);
+      if (s.includes('.')) s = s.replace(/\.?0+$/, '');
+      return (x < 0 ? '-' : '') + s;
+    }
+
+    function fmtPrice(x, withDollar) {
+      if (!isFinite(x)) return '—';
+      const d = priceDecimals(x);
+      const abs = Math.abs(x);
+      const s = abs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: d });
+      return (x < 0 ? '−' : '') + (withDollar ? '$' + s : s);
+    }
+
+    function copyPrice(x) {
+      if (!isFinite(x)) return '';
+      return trimFixed(x, priceDecimals(x));
+    }
+
+    function fmtUsd(x, signed) {
+      if (!isFinite(x)) return '—';
+      const body = Math.abs(x).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const sign = x < 0 || Object.is(x, -0) ? '−' : (signed && x > 0 ? '+' : '');
+      return sign + '$' + body;
+    }
+
+    function fmtPct(x, signed) {
+      if (!isFinite(x)) return '—';
+      const body = trimFixed(Math.abs(x), Math.abs(x) >= 10 ? 2 : 2);
+      const sign = x < 0 ? '−' : (signed && x > 0 ? '+' : '');
+      return sign + body + '%';
+    }
+
+    function validBase() {
+      return state.margin > 0 && state.entry > 0 && state.lev >= 1;
+    }
+
+    function qty() {
+      return (state.margin * state.lev) / state.entry;
+    }
+
+    function position() {
+      return state.margin * state.lev;
+    }
+
+    function pnlAt(exit) {
+      const q = qty();
+      return state.side === 'long' ? q * (exit - state.entry) : q * (state.entry - exit);
+    }
+
+    function exitFromPnl(target) {
+      const q = qty();
+      if (!(q > 0)) return NaN;
+      return state.side === 'long' ? state.entry + target / q : state.entry - target / q;
+    }
+
+    function exitFromRoi(roiPct) {
+      return exitFromPnl(state.margin * (roiPct / 100));
+    }
+
+    function feesAt(exit) {
+      const rate = Math.max(0, state.feePct) / 100;
+      const open = position() * rate;
+      const close = qty() * exit * rate;
+      return { open, close, total: open + close };
+    }
+
+    function liqPrice() {
+      if (!validBase()) return NaN;
+      if (state.side === 'long') {
+        const k = 1 - 1 / state.lev + MM;
+        return k > 0 ? state.entry * k : NaN;
+      }
+      const k = 1 + 1 / state.lev - MM;
+      return k > 0 ? state.entry * k : NaN;
+    }
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return;
+        const o = JSON.parse(raw);
+        if (o.side === 'long' || o.side === 'short') state.side = o.side;
+        if (typeof o.coin === 'string' && o.coin.trim()) state.coin = o.coin.trim().slice(0, 12);
+        if (isFinite(o.margin) && o.margin > 0) state.margin = o.margin;
+        if (isFinite(o.entry) && o.entry > 0) state.entry = o.entry;
+        if (isFinite(o.lev)) state.lev = Math.min(LEV_MAX, Math.max(1, Math.round(o.lev)));
+        if (isFinite(o.feePct) && o.feePct >= 0) state.feePct = o.feePct;
+        state.tp = (o.tp == null || o.tp === '') ? null : (isFinite(o.tp) ? o.tp : state.tp);
+        state.sl = (o.sl == null || o.sl === '') ? null : (isFinite(o.sl) ? o.sl : state.sl);
+      } catch (e) { /* ignore */ }
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          side: state.side,
+          coin: state.coin,
+          margin: state.margin,
+          entry: state.entry,
+          lev: state.lev,
+          feePct: state.feePct,
+          tp: state.tp,
+          sl: state.sl,
+        }));
+      } catch (e) { /* ignore */ }
+    }
+
+    function bindInput(el, onCommit, { live } = {}) {
+      el.addEventListener('focus', () => focused.add(el));
+      el.addEventListener('blur', () => {
+        focused.delete(el);
+        onCommit(el.value);
+        render();
+      });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') el.blur();
+      });
+      el.addEventListener('input', () => {
+        if (live) {
+          onCommit(el.value);
+          render();
+        }
+      });
+    }
+
+    function setIfUnfocused(el, value) {
+      if (focused.has(el)) return;
+      if (el.value !== value) el.value = value;
+    }
+
+    function positionBubble() {
+      const min = 1, max = LEV_MAX;
+      const pct = (state.lev - min) / (max - min);
+      const range = els.levRange;
+      const thumb = 46;
+      const x = pct * (range.offsetWidth - thumb) + thumb / 2;
+      els.levBubble.style.left = x + 'px';
+      els.levBubble.textContent = state.lev + 'x';
+      els.levFill.style.width = (x) + 'px';
+    }
+
+    function coinGlyph(name) {
+      const n = (name || '').trim().toUpperCase();
+      if (n === 'BTC' || n === 'XBT') return { text: '₿', alt: false };
+      const letters = n.replace(/[^A-Z0-9]/g, '').slice(0, 3) || '?';
+      return { text: letters, alt: true };
+    }
+
+    function renderChips() {
+      els.levChips.innerHTML = '';
+      LEV_CHIPS.forEach((v) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = v + 'x';
+        if (state.lev === v) b.classList.add('on');
+        b.addEventListener('click', () => { state.lev = v; save(); render(); });
+        els.levChips.appendChild(b);
+      });
+      els.tpChips.innerHTML = '';
+      TP_CHIPS.forEach((v) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = '+' + v + '%';
+        if (state.tp === v) b.classList.add('on');
+        b.addEventListener('click', () => { state.tp = v; save(); render(); });
+        els.tpChips.appendChild(b);
+      });
+      els.slChips.innerHTML = '';
+      SL_CHIPS.forEach((v) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = v + '%';
+        if (state.sl === v) b.classList.add('on');
+        b.addEventListener('click', () => { state.sl = v; save(); render(); });
+        els.slChips.appendChild(b);
+      });
+    }
+
+    function sideOk(kind, exit) {
+      if (!isFinite(exit) || !validBase()) return true;
+      if (kind === 'tp') {
+        return state.side === 'long' ? exit > state.entry : exit < state.entry;
+      }
+      return state.side === 'long' ? exit < state.entry : exit > state.entry;
+    }
+
+    function render() {
+      const coin = state.coin || 'BTC';
+      const g = coinGlyph(coin);
+      els.coinIcon.textContent = g.text;
+      els.coinIcon.classList.toggle('alt', g.alt);
+      setIfUnfocused(els.coin, coin);
+
+      const long = state.side === 'long';
+      els.btnLong.className = long ? 'on-long' : '';
+      els.btnShort.className = long ? '' : 'on-short';
+      els.cta.className = 'cta ' + (long ? 'long' : 'short');
+      els.cta.textContent = (long ? 'Лонг ' : 'Шорт ') + coin;
+
+      setIfUnfocused(els.margin, focused.has(els.margin) ? els.margin.value : trimFixed(state.margin, 2));
+      setIfUnfocused(els.entry, focused.has(els.entry) ? els.entry.value : trimFixed(state.entry, priceDecimals(state.entry)));
+      setIfUnfocused(els.levNum, String(state.lev));
+      els.levRange.value = String(state.lev);
+      setIfUnfocused(els.feePct, trimFixed(state.feePct, 4));
+
+      els.headPrice.textContent = validBase() ? fmtPrice(state.entry, true) : '—';
+      els.position.textContent = validBase()
+        ? (Number.isInteger(position()) ? '$' + position().toLocaleString('en-US') : fmtUsd(position()))
+        : '—';
+
+      const liq = liqPrice();
+      els.liq.textContent = isFinite(liq) ? fmtPrice(liq, true) : 'н/д';
+      if (isFinite(liq) && state.entry > 0) {
+        const p = ((liq - state.entry) / state.entry) * 100;
+        els.liqPct.textContent = '(' + fmtPct(p, true) + ')';
+      } else {
+        els.liqPct.textContent = state.lev > 1 / MM ? '(при таком плече оценка грубая)' : '';
+      }
+
+      const feeOpenCloseAtEntry = validBase() ? feesAt(state.entry).total : NaN;
+      els.feeEst.textContent = isFinite(feeOpenCloseAtEntry)
+        ? Math.abs(feeOpenCloseAtEntry).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : '—';
+
+      requestAnimationFrame(positionBubble);
+      renderChips();
+
+      const tpExit = state.tp == null ? NaN : exitFromRoi(state.tp);
+      const slExit = state.sl == null ? NaN : exitFromRoi(state.sl);
+
+      if (state.tp == null) {
+        setIfUnfocused(els.tpPrice, '');
+        setIfUnfocused(els.tpPct, '');
+        setIfUnfocused(els.tpUsd, '');
+        els.tpLine.innerHTML = '';
+        els.tpMove.textContent = '';
+        els.tpWarn.hidden = true;
+      } else if (validBase() && isFinite(tpExit)) {
+        const gross = pnlAt(tpExit);
+        const net = gross - feesAt(tpExit).total;
+        const move = ((tpExit - state.entry) / state.entry) * 100;
+        setIfUnfocused(els.tpPrice, trimFixed(tpExit, priceDecimals(tpExit)));
+        setIfUnfocused(els.tpPct, (state.tp > 0 ? '+' : '') + trimFixed(state.tp, 2));
+        setIfUnfocused(els.tpUsd, (gross > 0 ? '+' : '') + trimFixed(gross, 2));
+        els.tpLine.innerHTML = 'Прибыль: ' + fmtUsd(gross, true) +
+          '<span class="net">нетто: ' + fmtUsd(net, true) + '</span>';
+        els.tpMove.textContent = 'ход цены ' + fmtPct(move, true);
+        if (!sideOk('tp', tpExit)) {
+          els.tpWarn.hidden = false;
+          els.tpWarn.textContent = 'Цена TP не в сторону прибыли для этого направления.';
+        } else {
+          els.tpWarn.hidden = true;
+        }
+      } else {
+        els.tpLine.innerHTML = '';
+        els.tpMove.textContent = '';
+        els.tpWarn.hidden = true;
+      }
+
+      if (state.sl == null) {
+        setIfUnfocused(els.slPrice, '');
+        setIfUnfocused(els.slPct, '');
+        setIfUnfocused(els.slUsd, '');
+        els.slLine.innerHTML = '';
+        els.slMove.textContent = '';
+        els.slWarn.hidden = true;
+      } else if (validBase() && isFinite(slExit)) {
+        const gross = pnlAt(slExit);
+        const net = gross - feesAt(slExit).total;
+        const move = ((slExit - state.entry) / state.entry) * 100;
+        setIfUnfocused(els.slPrice, trimFixed(slExit, priceDecimals(slExit)));
+        setIfUnfocused(els.slPct, (state.sl > 0 ? '+' : '') + trimFixed(state.sl, 2));
+        setIfUnfocused(els.slUsd, trimFixed(gross, 2));
+        els.slLine.innerHTML = 'Лосс: ' + fmtUsd(gross, true) +
+          '<span class="net">нетто: ' + fmtUsd(net, true) + '</span>';
+        els.slMove.textContent = 'ход цены ' + fmtPct(move, true);
+        let warn = '';
+        if (!sideOk('sl', slExit)) warn = 'Цена SL не в сторону убытка для этого направления.';
+        else if (isFinite(liq)) {
+          const beyond = long ? slExit <= liq : slExit >= liq;
+          if (beyond) warn = 'SL за ориентировочной ликвидацией — позиция может закрыться раньше.';
+        }
+        els.slWarn.hidden = !warn;
+        els.slWarn.textContent = warn;
+      } else {
+        els.slLine.innerHTML = '';
+        els.slMove.textContent = '';
+        els.slWarn.hidden = true;
+      }
+
+      if (validBase() && isFinite(tpExit) && isFinite(slExit) && state.tp != null && state.sl != null) {
+        const reward = pnlAt(tpExit);
+        const risk = Math.abs(pnlAt(slExit));
+        if (risk > 0 && reward > 0) {
+          const ratio = reward / risk;
+          els.rr.textContent = 'R:R  1 : ' + trimFixed(ratio, 2);
+        } else {
+          els.rr.textContent = 'R:R —';
+        }
+      } else {
+        els.rr.textContent = 'R:R —';
+      }
+
+      const tpOk = validBase() && state.tp != null && isFinite(tpExit);
+      const slOk = validBase() && state.sl != null && isFinite(slExit);
+      els.outTp.textContent = tpOk ? copyPrice(tpExit) : '—';
+      els.outSl.textContent = slOk ? copyPrice(slExit) : '—';
+
+      const bits = [];
+      if (tpOk) {
+        const g = pnlAt(tpExit);
+        bits.push('Для режима PnL: TP <b>' + fmtUsd(g, true) + '</b>' +
+          (slOk ? ' · SL <b>' + fmtUsd(pnlAt(slExit), true) + '</b>' : ''));
+        bits.push('Для режима ROI(%): TP <b>' + fmtPct(state.tp, true) + '</b>' +
+          (slOk ? ' · SL <b>' + fmtPct(state.sl, true) + '</b>' : ''));
+      } else if (slOk) {
+        bits.push('Для режима PnL: SL <b>' + fmtUsd(pnlAt(slExit), true) + '</b>');
+        bits.push('Для режима ROI(%): SL <b>' + fmtPct(state.sl, true) + '</b>');
+      }
+      els.alts.innerHTML = bits.join('<br>');
+    }
+
+    function toast(text) {
+      els.toast.textContent = text;
+      els.toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => els.toast.classList.remove('show'), 1400);
+    }
+
+    async function copy(kind) {
+      const exit = kind === 'tp' ? exitFromRoi(state.tp) : exitFromRoi(state.sl);
+      const text = copyPrice(exit);
+      if (!text) { toast('Нет цены'); return; }
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e2) {}
+        document.body.removeChild(ta);
+      }
+      const btn = kind === 'tp' ? els.copyTp : els.copySl;
+      btn.textContent = 'Готово';
+      btn.classList.add('done');
+      setTimeout(() => { btn.textContent = 'Копировать'; btn.classList.remove('done'); }, 1200);
+      toast('Скопировано: ' + text);
+    }
+
+    bindInput(els.coin, (v) => {
+      const t = String(v || '').trim().slice(0, 12);
+      state.coin = t || 'BTC';
+      save();
+    }, { live: true });
+
+    bindInput(els.margin, (v) => {
+      const n = parseNum(v);
+      if (n > 0) state.margin = n;
+      save();
+    }, { live: true });
+
+    bindInput(els.entry, (v) => {
+      const n = parseNum(v);
+      if (n > 0) state.entry = n;
+      save();
+    }, { live: true });
+
+    bindInput(els.feePct, (v) => {
+      const n = parseNum(v);
+      if (isFinite(n) && n >= 0 && n < 50) state.feePct = n;
+      save();
+    }, { live: true });
+
+    function setLev(v) {
+      const n = Math.round(parseNum(v));
+      if (!isFinite(n)) return;
+      state.lev = Math.min(LEV_MAX, Math.max(1, n));
+      save();
+    }
+    bindInput(els.levNum, (v) => { setLev(v); }, { live: true });
+    els.levRange.addEventListener('input', () => { setLev(els.levRange.value); render(); });
+
+    bindInput(els.tpPrice, (v) => {
+      if (!String(v).trim()) { state.tp = null; save(); return; }
+      const n = parseNum(v);
+      if (!isFinite(n) || !validBase()) return;
+      const roi = pnlAt(n) / state.margin * 100;
+      if (isFinite(roi)) state.tp = roi;
+      save();
+    }, { live: true });
+
+    bindInput(els.tpPct, (v) => {
+      if (!String(v).trim()) { state.tp = null; save(); return; }
+      const n = parseNum(v);
+      if (!isFinite(n)) return;
+      state.tp = n;
+      save();
+    }, { live: true });
+
+    bindInput(els.tpUsd, (v) => {
+      if (!String(v).trim()) { state.tp = null; save(); return; }
+      const n = parseNum(v);
+      if (!isFinite(n) || !validBase() || !(state.margin > 0)) return;
+      state.tp = (n / state.margin) * 100;
+      save();
+    }, { live: true });
+
+    bindInput(els.slPrice, (v) => {
+      if (!String(v).trim()) { state.sl = null; save(); return; }
+      const n = parseNum(v);
+      if (!isFinite(n) || !validBase()) return;
+      const roi = pnlAt(n) / state.margin * 100;
+      if (isFinite(roi)) state.sl = roi;
+      save();
+    }, { live: true });
+
+    bindInput(els.slPct, (v) => {
+      if (!String(v).trim()) { state.sl = null; save(); return; }
+      const n = parseNum(v);
+      if (!isFinite(n)) return;
+      state.sl = n;
+      save();
+    }, { live: true });
+
+    bindInput(els.slUsd, (v) => {
+      if (!String(v).trim()) { state.sl = null; save(); return; }
+      let n = parseNum(v);
+      if (!isFinite(n) || !validBase() || !(state.margin > 0)) return;
+      if (n > 0) n = -n;
+      state.sl = (n / state.margin) * 100;
+      save();
+    }, { live: true });
+
+    els.btnLong.addEventListener('click', () => { state.side = 'long'; save(); render(); });
+    els.btnShort.addEventListener('click', () => { state.side = 'short'; save(); render(); });
+    els.clearTp.addEventListener('click', () => { state.tp = null; save(); render(); });
+    els.clearSl.addEventListener('click', () => { state.sl = null; save(); render(); });
+    els.copyTp.addEventListener('click', () => copy('tp'));
+    els.copySl.addEventListener('click', () => copy('sl'));
+    window.addEventListener('resize', positionBubble);
+
+    load();
+    render();
+  })();
+  </script>
+</body>
+</html>
