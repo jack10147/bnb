@@ -316,17 +316,43 @@
     .chips.green button.on { background: var(--green-dim); color: var(--green-text); border-color: transparent; }
     .chips.red button.on { background: var(--red-dim); color: var(--red-text); border-color: transparent; }
 
-    .meta {
+    .liq-card {
+      background: var(--card);
+      border: 1px solid #3a2e14;
+      border-radius: var(--r);
+      padding: 12px 14px;
+      margin: 0 0 10px;
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px;
-      color: var(--muted);
-      padding: 2px 2px 12px;
-      line-height: 1.4;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
     }
-    .meta b { color: #d8d8d8; font-weight: 650; }
+    .liq-card .liq-k {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffb020;
+      flex-shrink: 0;
+    }
+    .liq-vals {
+      text-align: right;
+      min-width: 0;
+    }
+    .liq-v {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffc44d;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .liq-p {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffb020;
+      margin-top: 2px;
+    }
     .fee-edit {
+      padding: 0 2px 12px;
       display: flex;
       align-items: center;
       gap: 4px;
@@ -430,6 +456,11 @@
       font-size: 12px;
       color: #ffb020;
     }
+    .warn.danger {
+      color: #ff5c7a;
+      font-weight: 700;
+      font-size: 13px;
+    }
     .rr {
       text-align: center;
       font-size: 14px;
@@ -465,6 +496,18 @@
     }
     .paste-row .v.tp { color: var(--green-text); }
     .paste-row .v.sl { color: var(--red-text); }
+    .paste-row .v.liq { color: #ffc44d; }
+    .liq-alert {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(246, 70, 93, .14);
+      color: #ff5c7a;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .liq-alert.show { display: block; }
     .copy-btn {
       flex-shrink: 0;
       height: 38px;
@@ -575,14 +618,18 @@
       <div class="chips" id="levChips"></div>
     </section>
 
-    <div class="meta">
-      <div>Ликвидация ≈ <b id="liq">—</b> <span id="liqPct"></span></div>
-      <div class="fee-edit">
-        <span>~$<span id="feeEst">—</span> комиссия</span>
-        <span>· тейкер</span>
-        <input id="feePct" inputmode="decimal" aria-label="Комиссия тейкер, % за сторону" />
-        <span>% / сторона</span>
+    <div class="liq-card" id="liqTopCard">
+      <div class="liq-k">Ликвидация</div>
+      <div class="liq-vals">
+        <span class="liq-v" id="liq">—</span>
+        <span class="liq-p" id="liqPct"></span>
       </div>
+    </div>
+    <div class="fee-edit">
+      <span>~$<span id="feeEst">—</span> комиссия</span>
+      <span>· тейкер</span>
+      <input id="feePct" inputmode="decimal" aria-label="Комиссия тейкер, % за сторону" />
+      <span>% / сторона</span>
     </div>
 
     <div class="cta long" id="cta">Лонг BTC</div>
@@ -660,6 +707,15 @@
         </div>
         <button type="button" class="copy-btn" id="copySl">Копировать</button>
       </div>
+      <div class="paste-row">
+        <div>
+          <div class="k">Ликвидация</div>
+          <div class="v liq" id="outLiq">—</div>
+          <div class="k" id="outLiqPct"></div>
+        </div>
+        <button type="button" class="copy-btn" id="copyLiq">Копировать</button>
+      </div>
+      <div class="liq-alert" id="liqAlert">Ликвидирует раньше стопа</div>
       <div class="alts" id="alts"></div>
     </section>
   </div>
@@ -668,7 +724,13 @@
   <script>
   (function () {
     const KEY = 'bnb-calc';
-    const MM = 0.005;
+    // Isolated MMR calibrated to Aster screenshot:
+    // BTC long, entry 60881, 19x, margin $1000 → est. liq $58,407 (−4.06%).
+    // leverageBracket is not public (401). 1.2% reproduces that number
+    // (60881 * (1 - 1/19 + 0.012) ≈ 58407.31). For coins whose max leverage
+    // is so high that 1.2% would exceed initial margin, cap MMR so liq stays
+    // on the correct side of entry.
+    const BASE_MMR = 0.012;
     const TP_CHIPS = [10, 25, 50, 100];
     const SL_CHIPS = [-10, -25, -50, -75];
     const LEV_CHIPS = [10, 20, 50, 100];
@@ -699,6 +761,7 @@
       margin: $('margin'), position: $('position'), entry: $('entry'),
       levNum: $('levNum'), levRange: $('levRange'), levBubble: $('levBubble'), levFill: $('levFill'),
       levChips: $('levChips'), liq: $('liq'), liqPct: $('liqPct'),
+      outLiq: $('outLiq'), outLiqPct: $('outLiqPct'), liqAlert: $('liqAlert'),
       feeEst: $('feeEst'), feePct: $('feePct'), cta: $('cta'),
       tpPrice: $('tpPrice'), tpPct: $('tpPct'), tpUsd: $('tpUsd'),
       slPrice: $('slPrice'), slPct: $('slPct'), slUsd: $('slUsd'),
@@ -707,7 +770,7 @@
       tpMove: $('tpMove'), slMove: $('slMove'),
       tpWarn: $('tpWarn'), slWarn: $('slWarn'),
       rr: $('rr'), outTp: $('outTp'), outSl: $('outSl'), alts: $('alts'),
-      copyTp: $('copyTp'), copySl: $('copySl'),
+      copyTp: $('copyTp'), copySl: $('copySl'), copyLiq: $('copyLiq'),
       clearTp: $('clearTp'), clearSl: $('clearSl'), toast: $('toast'),
     };
 
@@ -851,14 +914,31 @@
       return { open, close, total: open + close };
     }
 
+    function mmr() {
+      const maxL = currentCoin().max || 40;
+      const cap = Math.max(0.0001, 1 / maxL - 0.0005);
+      return Math.min(BASE_MMR, cap);
+    }
+
     function liqPrice() {
       if (!validBase()) return NaN;
+      const m = mmr();
       if (state.side === 'long') {
-        const k = 1 - 1 / state.lev + MM;
-        return k > 0 ? state.entry * k : NaN;
+        const k = 1 - 1 / state.lev + m;
+        return (k > 0 && k < 1) ? state.entry * k : NaN;
       }
-      const k = 1 + 1 / state.lev - MM;
-      return k > 0 ? state.entry * k : NaN;
+      const k = 1 + 1 / state.lev - m;
+      return (k > 1) ? state.entry * k : NaN;
+    }
+
+    function liqMovePct(liq) {
+      if (!isFinite(liq) || !(state.entry > 0)) return NaN;
+      return ((liq - state.entry) / state.entry) * 100;
+    }
+
+    function slBeyondLiq(slExit, liq) {
+      if (!isFinite(slExit) || !isFinite(liq)) return false;
+      return state.side === 'long' ? slExit <= liq : slExit >= liq;
     }
 
     function load() {
@@ -1040,12 +1120,14 @@
         : '—';
 
       const liq = liqPrice();
-      els.liq.textContent = isFinite(liq) ? fmtPrice(liq, true) : 'н/д';
-      if (isFinite(liq) && state.entry > 0) {
-        const p = ((liq - state.entry) / state.entry) * 100;
-        els.liqPct.textContent = '(' + fmtPct(p, true) + ')';
+      const liqPctVal = liqMovePct(liq);
+      els.liq.textContent = isFinite(liq) ? ('~' + fmtPrice(liq, true)) : 'н/д';
+      if (isFinite(liqPctVal)) {
+        els.liqPct.textContent = fmtPct(liqPctVal, true) + ' · isolated';
+      } else if (validBase() && 1 / state.lev <= mmr()) {
+        els.liqPct.textContent = 'при таком плече оценка грубая';
       } else {
-        els.liqPct.textContent = state.lev > 1 / MM ? '(при таком плече оценка грубая)' : '';
+        els.liqPct.textContent = '';
       }
 
       const feeOpenCloseAtEntry = validBase() ? feesAt(state.entry).total : NaN;
@@ -1106,13 +1188,15 @@
           '<span class="net">нетто: ' + fmtUsd(net, true) + '</span>';
         els.slMove.textContent = 'ход цены ' + fmtPct(move, true);
         let warn = '';
+        let danger = false;
         if (!sideOk('sl', slExit)) warn = 'Цена SL не в сторону убытка для этого направления.';
-        else if (isFinite(liq)) {
-          const beyond = long ? slExit <= liq : slExit >= liq;
-          if (beyond) warn = 'SL за ориентировочной ликвидацией — позиция может закрыться раньше.';
+        else if (slBeyondLiq(slExit, liq)) {
+          warn = 'Ликвидирует раньше стопа';
+          danger = true;
         }
         els.slWarn.hidden = !warn;
         els.slWarn.textContent = warn;
+        els.slWarn.classList.toggle('danger', danger);
       } else {
         els.slLine.innerHTML = '';
         els.slMove.textContent = '';
@@ -1136,6 +1220,10 @@
       const slOk = validBase() && state.sl != null && isFinite(slExit);
       els.outTp.textContent = tpOk ? copyPrice(tpExit) : '—';
       els.outSl.textContent = slOk ? copyPrice(slExit) : '—';
+      els.outLiq.textContent = isFinite(liq) ? ('~' + fmtPrice(liq, true)) : '—';
+      els.outLiqPct.textContent = isFinite(liqPctVal) ? fmtPct(liqPctVal, true) + ' от входа · isolated' : '';
+      const showAlert = slOk && slBeyondLiq(slExit, liq);
+      els.liqAlert.classList.toggle('show', !!showAlert);
 
       const bits = [];
       if (tpOk) {
@@ -1159,8 +1247,14 @@
     }
 
     async function copy(kind) {
-      const exit = kind === 'tp' ? exitFromRoi(state.tp) : exitFromRoi(state.sl);
-      const text = copyPrice(exit);
+      let text = '';
+      if (kind === 'liq') {
+        const liq = liqPrice();
+        text = isFinite(liq) ? copyPrice(liq) : '';
+      } else {
+        const exit = kind === 'tp' ? exitFromRoi(state.tp) : exitFromRoi(state.sl);
+        text = copyPrice(exit);
+      }
       if (!text) { toast('Нет цены'); return; }
       try {
         await navigator.clipboard.writeText(text);
@@ -1175,7 +1269,7 @@
         try { document.execCommand('copy'); } catch (e2) {}
         document.body.removeChild(ta);
       }
-      const btn = kind === 'tp' ? els.copyTp : els.copySl;
+      const btn = kind === 'tp' ? els.copyTp : kind === 'sl' ? els.copySl : els.copyLiq;
       btn.textContent = 'Готово';
       btn.classList.add('done');
       setTimeout(() => { btn.textContent = 'Копировать'; btn.classList.remove('done'); }, 1200);
@@ -1317,6 +1411,7 @@
     els.clearSl.addEventListener('click', () => { state.sl = null; save(); render(); });
     els.copyTp.addEventListener('click', () => copy('tp'));
     els.copySl.addEventListener('click', () => copy('sl'));
+    els.copyLiq.addEventListener('click', () => copy('liq'));
     els.refreshPrice.addEventListener('click', () => refreshPrice({ fillEntry: true }));
     window.addEventListener('resize', positionBubble);
 
